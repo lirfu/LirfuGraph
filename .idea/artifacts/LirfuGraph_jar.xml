@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LirfuGraph:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LirfuGraph_jar</output-path>
+    <root id="archive" name="LirfuGraph.jar">
+      <element id="module-output" name="LirfuGraph" />
+    </root>
+  </artifact>
+</component>

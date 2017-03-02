@@ -1,5 +1,5 @@
 # LirfuGraph
-An extensional library for data presentation in Java.
+An extensional library and a quick solution for data presentation and comparison in Java.
 
 ## What can it do?
 It has a built-in simple window builder for basic graph tiling.
@@ -70,7 +70,7 @@ And finally, build and show the window:
 new Window(container, true, true);
 ```
 
-## How to build your own graph?
+## How to build your own graph? :ant:
 Each graph extends the `GraphTemplate`, which containsfollowing standardised values:
 * padding
 * interface color

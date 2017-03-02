@@ -76,8 +76,15 @@ Each graph extends the `GraphTemplate`, which containsfollowing standardised val
 * interface color
 * primary graph color
 * secondary graph color (if a graph has two data sets)
-It contains the `getAdjustedSize` method which returns your actual graph dimensions, subtracting the padding value.
+
+It contains the `getAdjustedSize` method which returns your actual graph dimensions, subtracting the padding value.<br>
 The `drawTitleAndFrame` method should be called to draw the standardised graph frame and graph title.
+
+The rest is up to you!  :smile:<br>
+All you need to implement is:
+* A method for adding data and a structure to store it
+* Override the `paint(Graphics g)` method and draw (present) the stored data
+* Get the graph location in window with `getLocation()` and correct drawing positions with it
 
 ## Want to contribute?
 If you like this project you're welcome to contribute with code or suggestions.<br>

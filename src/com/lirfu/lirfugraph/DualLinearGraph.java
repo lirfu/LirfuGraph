@@ -2,6 +2,7 @@ package com.lirfu.lirfugraph;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -9,8 +10,8 @@ public class DualLinearGraph extends GraphTemplate {
 	private int maxDrawnPoints;
 	private final int numberOfHorizontals = 5;
 
-	private LinkedList<Double> points1;
-	private LinkedList<Double> points2;
+	private ArrayList<Double> points1;
+	private ArrayList<Double> points2;
 
 	private int iterations;
 	private boolean iterationsSet = false;
@@ -19,8 +20,8 @@ public class DualLinearGraph extends GraphTemplate {
 	public DualLinearGraph(String title) {
 
 		this.title = title;
-		this.points1 = new LinkedList<>();
-		this.points2 = new LinkedList<>();
+		this.points1 = new ArrayList<>();
+		this.points2 = new ArrayList<>();
 	}
 
 	public void setIterations(int iterations) {
@@ -30,13 +31,13 @@ public class DualLinearGraph extends GraphTemplate {
 
 	@Override
 	public void paint(Graphics g) {
-		LinkedList<Double> list1 = null;
-		LinkedList<Double> list2 = null;
+		ArrayList<Double> list1 = null;
+		ArrayList<Double> list2 = null;
 		synchronized (points1) {
-			list1 = new LinkedList<>(points1);
+			list1 = new ArrayList<>(points1);
 		}
 		synchronized (points2) {
-			list2 = new LinkedList<>(points2);
+			list2 = new ArrayList<>(points2);
 		}
 		Dimension size = getAdjustedSize();
 		Point l = getLocation();

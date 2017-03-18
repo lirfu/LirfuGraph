@@ -5,13 +5,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
 public class LinearGraph extends GraphTemplate {
     private int maxDrawnPoints;
     private final int numberOfHorizontals = 5;
-    private LinkedList<Double> points;
+    private ArrayList<Double> points;
     private int iterations;
     private boolean iterationsSet = false;
     private String title;
@@ -19,7 +20,7 @@ public class LinearGraph extends GraphTemplate {
     public LinearGraph(String title) {
 
         this.title = title;
-        this.points = new LinkedList<>();
+        this.points = new ArrayList<>();
     }
 
     public void setIterations(int iterations) {
@@ -29,12 +30,18 @@ public class LinearGraph extends GraphTemplate {
 
     @Override
     public void paint(Graphics g) {
-        LinkedList<Double> list = null;
+        ArrayList<Double> list = null;
         synchronized (points) {
-            list = new LinkedList<>(points);
+            list = new ArrayList<>(points);
         }
         Dimension size = new Dimension(getWidth() - padding * 2, getHeight() - padding * 2);
         Point l = getLocation();
+
+        if (list.size() > size.width) {
+            int skipEvery = list.size() / size.width;
+            for (int i = 0; i < list.size(); i += skipEvery)
+                list.remove(i);
+        }
 
         if (!iterationsSet)
             iterations = points.size();

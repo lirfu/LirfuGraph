@@ -20,6 +20,9 @@ Graphs currenty supported:
 * `DualLinearGraph`
   * A `LinearGraph` with two simultaneous lines of different colors.
 
+* `DialGraph`
+  * Displaying a single angle on a circle.
+
 ## How to use it?
 ### The long way:
 
@@ -71,7 +74,7 @@ new Window(container, true, true);
 ```
 
 ## How to build your own graph? :ant:
-Each graph extends the `GraphTemplate`, which containsfollowing standardised values:
+Each graph extends the `GraphTemplate`, which contains following standardized values:
 * padding
 * interface color
 * primary graph color

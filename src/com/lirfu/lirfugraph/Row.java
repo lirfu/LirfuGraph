@@ -2,6 +2,8 @@ package com.lirfu.lirfugraph;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -18,10 +20,20 @@ public class Row extends JPanel {
         this.graphs = new LinkedList<>();
 
         Collections.addAll(this.graphs, graphs);
+        for (GraphTemplate g : graphs) {
+            for (MouseListener l : g.getMouseListeners())
+                addMouseListener(l);
+            for (MouseMotionListener l : g.getMouseMotionListeners())
+                addMouseMotionListener(l);
+        }
     }
 
     public Row addGraph(GraphTemplate g) {
         graphs.add(g);
+        for (MouseListener l : g.getMouseListeners())
+            addMouseListener(l);
+        for (MouseMotionListener l : g.getMouseMotionListeners())
+            addMouseMotionListener(l);
         return this;
     }
 

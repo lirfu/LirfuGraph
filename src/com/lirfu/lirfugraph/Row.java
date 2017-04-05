@@ -2,6 +2,7 @@ package com.lirfu.lirfugraph;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Collections;
@@ -25,6 +26,8 @@ public class Row extends JPanel {
                 addMouseListener(l);
             for (MouseMotionListener l : g.getMouseMotionListeners())
                 addMouseMotionListener(l);
+            for (KeyListener l : g.getKeyListeners())
+                addKeyListener(l);
         }
     }
 
@@ -34,6 +37,8 @@ public class Row extends JPanel {
             addMouseListener(l);
         for (MouseMotionListener l : g.getMouseMotionListeners())
             addMouseMotionListener(l);
+        for (KeyListener l : g.getKeyListeners())
+            addKeyListener(l);
         return this;
     }
 

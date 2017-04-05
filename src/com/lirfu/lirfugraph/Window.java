@@ -15,10 +15,13 @@ public class Window extends JFrame {
 
     public Window(JPanel container, boolean exitOnClose) {
         this.container = container;
+
         for (MouseListener l : container.getMouseListeners())
             addMouseListener(l);
         for (MouseMotionListener l : container.getMouseMotionListeners())
             addMouseMotionListener(l);
+        for (KeyListener l : container.getKeyListeners())
+            addKeyListener(l);
 
         setLocation(0, 0);
         setSize(1000, 400);
@@ -26,29 +29,10 @@ public class Window extends JFrame {
         setDefaultCloseOperation(exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
 
         setFocusable(true);
-        addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                Window.this.repaint();
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-        });
     }
 
     public Window(JPanel container, boolean exitOnClose, boolean visibility) {
         this(container, exitOnClose);
-        for (MouseListener l : container.getMouseListeners())
-            addMouseListener(l);
-        for (MouseMotionListener l : container.getMouseMotionListeners())
-            addMouseMotionListener(l);
         setVisible(visibility);
     }
 

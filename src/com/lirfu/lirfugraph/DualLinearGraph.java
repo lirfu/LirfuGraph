@@ -40,14 +40,14 @@ public class DualLinearGraph extends GraphTemplate {
 			list2 = new ArrayList<>(points2);
 		}
 		Dimension size = getAdjustedSize();
-		Point l = getLocation();
+		Point l = template.getLocation();
 
 		if (!iterationsSet)
 			iterations = list1.size();
 
 		if (iterations == 0) {
 			g.setColor(primaryColor);
-			g.drawString("EMPTY!", l.x + getWidth() / 4, l.y + getHeight() / 2);
+			g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
 			return;
 		}
 
@@ -56,7 +56,7 @@ public class DualLinearGraph extends GraphTemplate {
 
 		if (max == 0) {
 			g.setColor(primaryColor);
-			g.drawString("Max is 0!", l.x + getWidth() / 6, l.y + getHeight() / 2);
+			g.drawString("Max is 0!", l.x + template.getWidth() / 6, l.y + template.getHeight() / 2);
 			return;
 		}
 
@@ -76,8 +76,8 @@ public class DualLinearGraph extends GraphTemplate {
 		drawTitleAndFrame(g, title);
 
 		g.drawString("" + iterations, l.x + padding + size.width - 10, l.y + size.height - 10 + 2 * padding); // max iteration
-		g.drawString("Max: " + max, l.x + getWidth() / 2, l.y + padding - 3);
-		g.drawString("Min: " + min, l.x + getWidth() / 2, l.y + size.height + padding + 13);
+		g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
+		g.drawString("Min: " + min, l.x + template.getWidth() / 2, l.y + size.height + padding + 13);
 
 		// First value
 		double lastValue1 = list1.get(0);
@@ -88,9 +88,9 @@ public class DualLinearGraph extends GraphTemplate {
 		AffineTransform old = g2.getTransform();
 		g2.rotate(-Math.PI / 2);
 		g2.setColor(primaryColor);
-		g2.drawString("" + lastValue1, -l.y - getHeight() + padding, l.x + padding - 5);
+		g2.drawString("" + lastValue1, -l.y - template.getHeight() + padding, l.x + padding - 5);
 		g2.setColor(secondaryColor);
-		g2.drawString("" + lastValue2, -l.y - getHeight() + padding, l.x + padding - 16);
+		g2.drawString("" + lastValue2, -l.y - template.getHeight() + padding, l.x + padding - 16);
 		g2.setTransform(old);
 
 		// Draw the curve
@@ -112,9 +112,9 @@ public class DualLinearGraph extends GraphTemplate {
 				// The last value
 		g2.rotate(Math.PI / 2);
 		g2.setColor(primaryColor);
-		g2.drawString("" + lastValue1, l.y + padding, -l.x + padding - 5 - getWidth());
+		g2.drawString("" + lastValue1, l.y + padding, -l.x + padding - 5 - template.getWidth());
 		g2.setColor(secondaryColor);
-		g2.drawString("" + lastValue2, l.y + padding, -l.x + padding - 16 - getWidth());
+		g2.drawString("" + lastValue2, l.y + padding, -l.x + padding - 16 - template.getWidth());
 		g2.setTransform(old);
 	}
 
@@ -129,15 +129,13 @@ public class DualLinearGraph extends GraphTemplate {
 		//		}
 	}
 
-	@Override
 	public void setSize(Dimension d) {
-		super.setSize(d);
+		template.setSize(d);
 		maxDrawnPoints = d.width - 2 * padding;
 	}
 
-	@Override
 	public void setSize(int width, int height) {
-		super.setSize(width, height);
+		template.setSize(width, height);
 		maxDrawnPoints = width - 2 * padding;
 		//		System.out.println("Size " + maxDrawnPoints);
 	}

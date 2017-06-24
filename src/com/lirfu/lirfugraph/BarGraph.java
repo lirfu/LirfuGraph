@@ -20,7 +20,7 @@ public class BarGraph extends GraphTemplate {
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        Point l = getLocation();
+        Point l = template.getLocation();
         Dimension size = getAdjustedSize();
 
         drawTitleAndFrame(g, title);
@@ -50,8 +50,8 @@ public class BarGraph extends GraphTemplate {
             }
         } else {
             LinearGraph linear = new LinearGraph("");
-            linear.setSize(getSize());
-            linear.setLocation(getLocation());
+            linear.setSize(template.getSize());
+            linear.template.setLocation(template.getLocation());
             for (double val : values)
                 linear.add(val);
             linear.paint(g);

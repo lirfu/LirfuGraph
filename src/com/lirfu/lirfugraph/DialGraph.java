@@ -16,7 +16,7 @@ public class DialGraph extends GraphTemplate {
 
     @Override
     public void paint(Graphics g) {
-        Point l = getLocation();
+        Point l = template.getLocation();
         Dimension size = getAdjustedSize();
 
         drawTitleAndFrame(g, title);

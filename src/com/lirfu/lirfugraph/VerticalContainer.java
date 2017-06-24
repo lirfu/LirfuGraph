@@ -1,60 +1,60 @@
 package com.lirfu.lirfugraph;
 
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class VerticalContainer extends JPanel {
+public class VerticalContainer implements Component {
+    private JPanel container;
     private LinkedList<Row> rows;
 
     public VerticalContainer() {
+        this.container = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                Point l = getLocation();
+                int rowHeight = getHeight() / rows.size();
+                int counter = 0;
+
+                for (Row r : rows) {
+                    r.getComponent().setSize(getWidth(), rowHeight);
+                    r.getComponent().setLocation(l.x, counter * rowHeight + l.y);
+                    r.getComponent().paint(g);
+
+                    counter++;
+                }
+            }
+        };
+
         this.rows = new LinkedList<>();
     }
 
     public VerticalContainer(Row... rows) {
         this();
-        Collections.addAll(this.rows, rows);
 
-        for (Row r : rows) {
-            for (MouseListener l : r.getMouseListeners())
-                addMouseListener(l);
-            for (MouseMotionListener l : r.getMouseMotionListeners())
-                addMouseMotionListener(l);
-            for (KeyListener l : r.getKeyListeners())
-                addKeyListener(l);
-        }
+        for (Row r : rows)
+            addRow(r);
     }
 
     public VerticalContainer addRow(Row row) {
         rows.add(row);
-        for (MouseListener l : row.getMouseListeners())
-            addMouseListener(l);
-        for (MouseMotionListener l : row.getMouseMotionListeners())
-            addMouseMotionListener(l);
-        for (KeyListener l : row.getKeyListeners())
-            addKeyListener(l);
+
+        for (MouseListener l : row.getComponent().getMouseListeners())
+            container.addMouseListener(l);
+        for (MouseMotionListener l : row.getComponent().getMouseMotionListeners())
+            container.addMouseMotionListener(l);
+        for (KeyListener l : row.getComponent().getKeyListeners())
+            container.addKeyListener(l);
+
         return this;
     }
 
     @Override
-    public void paint(Graphics g) {
-        Point l = getLocation();
-        int rowHeight = getHeight() / rows.size();
-        int counter = 0;
-
-        for (Row r : rows) {
-            r.setSize(getWidth(), rowHeight);
-            r.setLocation(l.x, counter * rowHeight + l.y);
-            r.paint(g);
-
-            counter++;
-        }
+    public java.awt.Component getComponent() {
+        return container;
     }
-
 }

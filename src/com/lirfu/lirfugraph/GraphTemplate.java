@@ -3,19 +3,29 @@ package com.lirfu.lirfugraph;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public class GraphTemplate extends JPanel {
+public abstract class GraphTemplate implements Component {
     protected static int padding = 25;
     protected Color interfaceColor = Color.decode("0x999999");
     protected Color primaryColor = Color.decode("0x0000ff");
     protected Color secondaryColor = Color.decode("0xff0000");
 
-    protected Dimension getAdjustedSize() {
-        return new Dimension(getWidth() - padding * 2, getHeight() - padding * 2);
+    protected JPanel template;
 
+    protected GraphTemplate() {
+        template = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                GraphTemplate.this.paint(g);
+            }
+        };
+    }
+
+    protected Dimension getAdjustedSize() {
+        return new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
     }
 
     protected void drawTitleAndFrame(Graphics g, String title) {
-        Point l = getLocation();
+        Point l = template.getLocation();
         Dimension size = getAdjustedSize();
         g.setColor(interfaceColor);
 
@@ -27,8 +37,16 @@ public class GraphTemplate extends JPanel {
         g.drawString(title, l.x + 3, l.y + 13);
     }
 
-    public GraphTemplate setPadding(int padding){
-        this.padding=padding;
+    public GraphTemplate setPadding(int padding) {
+        GraphTemplate.padding = padding;
+
         return this;
     }
+
+    @Override
+    public java.awt.Component getComponent() {
+        return template;
+    }
+
+    public abstract void paint(Graphics g);
 }

@@ -1,47 +1,57 @@
 package com.lirfu.lirfugraph;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-public class Window extends JFrame {
+public class Window {
+    private JFrame frame;
+
     private int padding = 10;
-    private JPanel container;
+    private Component container;
 
-    public Window(JPanel container, boolean exitOnClose) {
+    public Window(Component container, boolean exitOnClose) {
+        this.frame=new JFrame("LirfuGraph"){
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+
+                container.getComponent().setLocation(padding, padding);
+                container.getComponent().setSize(getWidth() - padding * 2, getHeight() - padding * 2);
+                container.getComponent().paint(g);
+            }
+        };
         this.container = container;
 
-        for (MouseListener l : container.getMouseListeners())
-            addMouseListener(l);
-        for (MouseMotionListener l : container.getMouseMotionListeners())
-            addMouseMotionListener(l);
-        for (KeyListener l : container.getKeyListeners())
-            addKeyListener(l);
+        for (MouseListener l : container.getComponent().getMouseListeners())
+            frame.addMouseListener(l);
+        for (MouseMotionListener l : container.getComponent().getMouseMotionListeners())
+            frame.addMouseMotionListener(l);
+        for (KeyListener l : container.getComponent().getKeyListeners())
+            frame.addKeyListener(l);
 
-        setLocation(0, 0);
-        setSize(1000, 400);
+        frame.setLocation(0, 0);
+        frame.setSize(1000, 400);
 
-        setDefaultCloseOperation(exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
 
-        setFocusable(true);
+        frame.setFocusable(true);
+
+        frame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                frame.repaint();
+            }
+        });
     }
 
-    public Window(JPanel container, boolean exitOnClose, boolean visibility) {
+    public Window(Component container, boolean exitOnClose, boolean visibility) {
         this(container, exitOnClose);
-        setVisible(visibility);
+        frame.setVisible(visibility);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        container.setLocation(padding, padding);
-        container.setSize(getWidth() - padding * 2, getHeight() - padding * 2);
-        container.paint(g);
+    public void setTitle(String title){
+        frame.setTitle(title);
     }
 }

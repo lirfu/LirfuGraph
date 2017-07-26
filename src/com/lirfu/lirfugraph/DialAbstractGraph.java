@@ -5,11 +5,11 @@ import java.awt.*;
 /**
  * Created by lirfu on 16.03.17..
  */
-public class DialGraph extends GraphTemplate {
+public class DialAbstractGraph extends AbstractGraph {
     private double angle;
     private String title;
 
-    public DialGraph(String title, double angle) {
+    public DialAbstractGraph(String title, double angle) {
         this.angle = angle;
         this.title = title;
     }

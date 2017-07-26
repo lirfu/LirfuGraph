@@ -4,9 +4,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 
-public class DualLinearGraph extends GraphTemplate {
+public class DualLinearAbstractGraph extends AbstractGraph {
 	private int maxDrawnPoints;
 	private final int numberOfHorizontals = 5;
 
@@ -17,7 +16,7 @@ public class DualLinearGraph extends GraphTemplate {
 	private boolean iterationsSet = false;
 	private String title;
 
-	public DualLinearGraph(String title) {
+	public DualLinearAbstractGraph(String title) {
 
 		this.title = title;
 		this.points1 = new ArrayList<>();

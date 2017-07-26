@@ -7,9 +7,8 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 
-public class LinearGraph extends GraphTemplate {
+public class LinearAbstractGraph extends AbstractGraph {
     private int maxDrawnPoints;
     private final int numberOfHorizontals = 5;
     private ArrayList<Double> points;
@@ -17,7 +16,7 @@ public class LinearGraph extends GraphTemplate {
     private boolean iterationsSet = false;
     private String title;
 
-    public LinearGraph(String title) {
+    public LinearAbstractGraph(String title) {
 
         this.title = title;
         this.points = new ArrayList<>();

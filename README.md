@@ -39,7 +39,7 @@ container.addRow(row);
 
 Next add some graphs to the row:
 ```java
-GraphTemplate graph = new BarGraph("Graph name");
+AbstractGraph graph = new BarGraph("Graph name");
 row.addGraph(graph);
 ```
 
@@ -57,7 +57,7 @@ new Window(container, true, true);
 ### The short way:
 First build the graph:
 ```java
-GraphTemplate graph = new DualLinearGraph("Graph name");
+AbstractGraph graph = new DualLinearGraph("Graph name");
 for(int i = 0; i <= 10; i++)
   graph.add((i-5), (i-5)(i-5));
 ```
@@ -74,7 +74,7 @@ new Window(container, true, true);
 ```
 
 ## How to build your own graph? :ant:
-Each graph extends the `GraphTemplate`, which contains following standardized values:
+Each graph extends the `AbstractGraph`, which contains following standardized values:
 * padding
 * interface color
 * primary graph color

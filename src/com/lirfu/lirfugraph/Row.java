@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public class Row implements Component {
     private JPanel panel;
-    private LinkedList<GraphTemplate> graphs;
+    private LinkedList<AbstractGraph> graphs;
 
     public Row() {
         this.panel = new JPanel() {
@@ -21,7 +21,7 @@ public class Row implements Component {
                 int singleWidth = getWidth() / graphs.size();
                 int counter = 0;
 
-                for (GraphTemplate gr : graphs) {
+                for (AbstractGraph gr : graphs) {
                     gr.getComponent().setSize(singleWidth, getHeight());
                     gr.getComponent().setLocation(counter * singleWidth + l.x, l.y);
                     gr.getComponent().paint(g);
@@ -34,14 +34,14 @@ public class Row implements Component {
         this.graphs = new LinkedList<>();
     }
 
-    public Row(GraphTemplate... graphs) {
+    public Row(AbstractGraph... graphs) {
         this();
 
-        for (GraphTemplate g : graphs)
+        for (AbstractGraph g : graphs)
             addGraph(g);
     }
 
-    public Row addGraph(GraphTemplate g) {
+    public Row addGraph(AbstractGraph g) {
         graphs.add(g);
 
         for (MouseListener l : g.getComponent().getMouseListeners())

@@ -5,12 +5,12 @@ import java.awt.geom.AffineTransform;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class BarGraph extends GraphTemplate {
+public class BarAbstractGraph extends AbstractGraph {
     private String title;
     public LinkedList<Double> values;
     private LinkedList<String> names;
 
-    public BarGraph(String title) {
+    public BarAbstractGraph(String title) {
         values = new LinkedList<>();
         names = new LinkedList<>();
         this.title = title;
@@ -49,7 +49,7 @@ public class BarGraph extends GraphTemplate {
 
             }
         } else {
-            LinearGraph linear = new LinearGraph("");
+            LinearAbstractGraph linear = new LinearAbstractGraph("");
             linear.setSize(template.getSize());
             linear.template.setLocation(template.getLocation());
             for (double val : values)

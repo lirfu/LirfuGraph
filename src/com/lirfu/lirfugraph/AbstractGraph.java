@@ -3,7 +3,7 @@ package com.lirfu.lirfugraph;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public abstract class GraphTemplate implements Component {
+public abstract class AbstractGraph implements Component {
     protected static int padding = 25;
     protected Color interfaceColor = Color.decode("0x999999");
     protected Color primaryColor = Color.decode("0x0000ff");
@@ -11,11 +11,11 @@ public abstract class GraphTemplate implements Component {
 
     protected JPanel template;
 
-    protected GraphTemplate() {
+    protected AbstractGraph() {
         template = new JPanel() {
             @Override
             public void paint(Graphics g) {
-                GraphTemplate.this.paint(g);
+                AbstractGraph.this.paint(g);
             }
         };
     }
@@ -37,8 +37,8 @@ public abstract class GraphTemplate implements Component {
         g.drawString(title, l.x + 3, l.y + 13);
     }
 
-    public GraphTemplate setPadding(int padding) {
-        GraphTemplate.padding = padding;
+    public AbstractGraph setPadding(int padding) {
+        AbstractGraph.padding = padding;
 
         return this;
     }

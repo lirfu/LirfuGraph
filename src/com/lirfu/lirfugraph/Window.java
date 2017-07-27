@@ -1,6 +1,6 @@
 package com.lirfu.lirfugraph;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
@@ -12,7 +12,7 @@ public class Window {
     private Component container;
 
     public Window(Component container, boolean exitOnClose) {
-        this.frame=new JFrame("LirfuGraph"){
+        this.frame = new JFrame("LirfuGraph") {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
@@ -22,6 +22,7 @@ public class Window {
                 container.getComponent().paint(g);
             }
         };
+
         this.container = container;
 
         for (MouseListener l : container.getComponent().getMouseListeners())
@@ -51,7 +52,14 @@ public class Window {
         frame.setVisible(visibility);
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         frame.setTitle(title);
+    }
+
+    public void redraw() {
+        if (container.needRedraw()) {
+            Rectangle r = container.getArea();
+            frame.repaint(r.x, r.y, r.width, r.height);
+        }
     }
 }

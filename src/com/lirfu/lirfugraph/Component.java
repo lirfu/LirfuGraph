@@ -7,4 +7,6 @@ import java.awt.*;
  */
 public interface Component {
     java.awt.Component getComponent();
+    boolean needRedraw();
+    Rectangle getArea();
 }

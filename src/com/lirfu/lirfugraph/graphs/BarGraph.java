@@ -1,16 +1,16 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Collections;
 import java.util.LinkedList;
 
-public class BarAbstractGraph extends AbstractGraph {
+public class BarGraph extends AbstractGraph {
     private String title;
     public LinkedList<Double> values;
     private LinkedList<String> names;
 
-    public BarAbstractGraph(String title) {
+    public BarGraph(String title) {
         values = new LinkedList<>();
         names = new LinkedList<>();
         this.title = title;
@@ -18,9 +18,11 @@ public class BarAbstractGraph extends AbstractGraph {
 
     @Override
     public void paint(Graphics g) {
+        setDirty(false);
+
         Graphics2D g2 = (Graphics2D) g;
 
-        Point l = template.getLocation();
+        Point l = graph.getLocation();
         Dimension size = getAdjustedSize();
 
         drawTitleAndFrame(g, title);
@@ -49,9 +51,9 @@ public class BarAbstractGraph extends AbstractGraph {
 
             }
         } else {
-            LinearAbstractGraph linear = new LinearAbstractGraph("");
-            linear.setSize(template.getSize());
-            linear.template.setLocation(template.getLocation());
+            LinearGraph linear = new LinearGraph("");
+            linear.setSize(graph.getSize());
+//            linear.setLocation(graph.getLocation());
             for (double val : values)
                 linear.add(val);
             linear.paint(g);
@@ -64,5 +66,6 @@ public class BarAbstractGraph extends AbstractGraph {
     public void add(String name, double value) {
         values.add(value);
         names.add(name);
+        setDirty(true);
     }
 }

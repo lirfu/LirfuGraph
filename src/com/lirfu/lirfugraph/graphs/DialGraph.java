@@ -1,22 +1,24 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
 import java.awt.*;
 
 /**
  * Created by lirfu on 16.03.17..
  */
-public class DialAbstractGraph extends AbstractGraph {
+public class DialGraph extends AbstractGraph {
     private double angle;
     private String title;
 
-    public DialAbstractGraph(String title, double angle) {
+    public DialGraph(String title, double angle) {
         this.angle = angle;
         this.title = title;
     }
 
     @Override
     public void paint(Graphics g) {
-        Point l = template.getLocation();
+        setDirty(false);
+
+        Point l = graph.getLocation();
         Dimension size = getAdjustedSize();
 
         drawTitleAndFrame(g, title);

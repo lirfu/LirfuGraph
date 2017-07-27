@@ -1,4 +1,6 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
+
+import com.lirfu.lirfugraph.HistoryTape;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,18 +10,20 @@ import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class LinearAbstractGraph extends AbstractGraph {
+public class LinearGraph extends AbstractGraph {
     private int maxDrawnPoints;
     private final int numberOfHorizontals = 5;
-    private ArrayList<Double> points;
+    private HistoryTape<Double> points;
     private int iterations;
     private boolean iterationsSet = false;
     private String title;
 
-    public LinearAbstractGraph(String title) {
+    private boolean isRefreshing;
+
+    public LinearGraph(String title) {
 
         this.title = title;
-        this.points = new ArrayList<>();
+        this.points = new HistoryTape(50);
     }
 
     public void setIterations(int iterations) {
@@ -29,25 +33,30 @@ public class LinearAbstractGraph extends AbstractGraph {
 
     @Override
     public void paint(Graphics g) {
+        isRefreshing = true;
+        setDirty(false);
+
         ArrayList<Double> list = null;
         synchronized (points) {
-            list = new ArrayList<>(points);
+            list = points.getSegment();
         }
-        Dimension size = new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
-        Point l = template.getLocation();
+        Dimension size = new Dimension(graph.getWidth() - padding * 2, graph.getHeight() - padding * 2);
+        Point l = graph.getLocation();
 
-        if (list.size() > size.width) {
-            int skipEvery = list.size() / size.width;
-            for (int i = 0; i < list.size(); i += skipEvery)
-                list.remove(i);
-        }
+//        if (list.size() > size.width) {
+//            int skipEvery = list.size() / size.width;
+//            for (int i = 0; i < list.size(); i += skipEvery)
+//                list.remove(i);
+//        }
 
         if (!iterationsSet)
             iterations = points.size();
 
         if (iterations == 0) {
             g.setColor(super.primaryColor);
-            g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
+            g.drawString("EMPTY!", l.x + graph.getWidth() / 4, l.y + graph.getHeight() / 2);
+
+            isRefreshing = false;
             return;
         }
 
@@ -56,7 +65,9 @@ public class LinearAbstractGraph extends AbstractGraph {
 
         if (max == 0) {
             g.setColor(super.primaryColor);
-            g.drawString("Max is 0!", l.x + template.getWidth() / 6, l.y + template.getHeight() / 2);
+            g.drawString("Max is 0!", l.x + graph.getWidth() / 6, l.y + graph.getHeight() / 2);
+
+            isRefreshing = false;
             return;
         }
 
@@ -76,8 +87,8 @@ public class LinearAbstractGraph extends AbstractGraph {
         drawTitleAndFrame(g, title);
 
         g.drawString("" + iterations, l.x + padding + size.width - 10, l.y + size.height - 10 + 2 * padding); // max iteration
-        g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
-        g.drawString("Min: " + min, l.x + template.getWidth() / 2, l.y + size.height + padding + 13);
+        g.drawString("Max: " + max, l.x + graph.getWidth() / 2, l.y + padding - 3);
+        g.drawString("Min: " + min, l.x + graph.getWidth() / 2, l.y + size.height + padding + 13);
 
         // First value
         g.setColor(super.primaryColor);
@@ -87,7 +98,7 @@ public class LinearAbstractGraph extends AbstractGraph {
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform old = g2.getTransform();
         g2.rotate(-Math.PI / 2);
-        g2.drawString("" + lastValue, -l.y - template.getHeight() + padding, l.x + padding - 5);
+        g2.drawString("" + lastValue, -l.y - graph.getHeight() + padding, l.x + padding - 5);
         g2.setTransform(old);
 
         // Draw the curve
@@ -101,27 +112,25 @@ public class LinearAbstractGraph extends AbstractGraph {
 
         // The last value
         g2.rotate(Math.PI / 2);
-        g2.drawString("" + lastValue, l.y + padding, -l.x + padding - 5 - template.getWidth());
+        g2.drawString("" + lastValue, l.y + padding, -l.x + padding - 5 - graph.getWidth());
         g2.setTransform(old);
+
+        isRefreshing = false;
     }
 
     public void add(double value) {
         points.add(value);
-        synchronized (points) {
-            //			System.out.println("Size " + points.size() + " max " + maxDrawnPoints);
-            if (points.size() > 0 && maxDrawnPoints > 0 && points.size() > maxDrawnPoints)
-                for (int i = 0; i < points.size(); i += 2)
-                    points.remove(i);
-        }
+
+        setDirty(true);
     }
 
     public void setSize(Dimension d) {
-        template.setSize(d);
+        graph.setSize(d);
         maxDrawnPoints = d.width - 2 * padding;
     }
 
     public void setSize(int width, int height) {
-        template.setSize(width, height);
+        graph.setSize(width, height);
         maxDrawnPoints = width - 2 * padding;
         //		System.out.println("Size " + maxDrawnPoints);
     }

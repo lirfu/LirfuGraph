@@ -1,18 +1,19 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
 import javax.swing.JPanel;
 import java.awt.*;
 
-public abstract class AbstractGraph implements Component {
+public abstract class AbstractGraph implements com.lirfu.lirfugraph.Component {
     protected static int padding = 25;
     protected Color interfaceColor = Color.decode("0x999999");
     protected Color primaryColor = Color.decode("0x0000ff");
     protected Color secondaryColor = Color.decode("0xff0000");
 
-    protected JPanel template;
+    protected JPanel graph;
+    private boolean dataDirty = false;
 
     protected AbstractGraph() {
-        template = new JPanel() {
+        graph = new JPanel() {
             @Override
             public void paint(Graphics g) {
                 AbstractGraph.this.paint(g);
@@ -21,11 +22,11 @@ public abstract class AbstractGraph implements Component {
     }
 
     protected Dimension getAdjustedSize() {
-        return new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
+        return new Dimension(graph.getWidth() - padding * 2, graph.getHeight() - padding * 2);
     }
 
     protected void drawTitleAndFrame(Graphics g, String title) {
-        Point l = template.getLocation();
+        Point l = graph.getLocation();
         Dimension size = getAdjustedSize();
         g.setColor(interfaceColor);
 
@@ -45,8 +46,22 @@ public abstract class AbstractGraph implements Component {
 
     @Override
     public java.awt.Component getComponent() {
-        return template;
+        return graph;
     }
 
     public abstract void paint(Graphics g);
+
+    @Override
+    public boolean needRedraw() {
+        return dataDirty;
+    }
+
+    @Override
+    public Rectangle getArea() {
+        return graph.getBounds();
+    }
+
+    protected void setDirty(boolean dirty) {
+        dataDirty = dirty;
+    }
 }

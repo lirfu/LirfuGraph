@@ -1,4 +1,7 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.layouts;
+
+import com.lirfu.lirfugraph.Component;
+import com.lirfu.lirfugraph.graphs.AbstractGraph;
 
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -8,7 +11,7 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class Row implements Component {
+public class Row implements com.lirfu.lirfugraph.Component {
     private JPanel panel;
     private LinkedList<AbstractGraph> graphs;
 
@@ -57,5 +60,36 @@ public class Row implements Component {
     @Override
     public java.awt.Component getComponent() {
         return panel;
+    }
+
+    @Override
+    public boolean needRedraw() {
+        for (Component c : graphs)
+            if (c.needRedraw())
+                return true;
+
+        return false;
+    }
+
+    @Override
+    public Rectangle getArea() {
+        int minx = 0, maxx = 0;
+        int miny = 0, maxy = 0;
+
+        Rectangle r;
+        for (Component c : graphs) {
+            r = c.getArea();
+
+            if (minx > r.x)
+                minx = r.x;
+            if (maxx < r.x + r.width)
+                maxx = r.x + r.width;
+            if (miny > r.y)
+                miny = r.y;
+            if (maxy < r.y + r.height)
+                maxy = r.y + r.height;
+        }
+
+        return new Rectangle(minx, miny, maxx - minx, maxy - miny);
     }
 }

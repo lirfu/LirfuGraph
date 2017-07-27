@@ -1,6 +1,9 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.layouts;
+
+import com.lirfu.lirfugraph.*;
 
 import java.awt.*;
+import java.awt.Component;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -8,7 +11,7 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class VerticalContainer implements Component {
+public class VerticalContainer implements com.lirfu.lirfugraph.Component {
     private JPanel container;
     private LinkedList<Row> rows;
 
@@ -56,5 +59,35 @@ public class VerticalContainer implements Component {
     @Override
     public java.awt.Component getComponent() {
         return container;
+    }
+
+    @Override
+    public boolean needRedraw() {
+        for (com.lirfu.lirfugraph.Component r : rows)
+            if (r.needRedraw())
+                return true;
+        return false;
+    }
+
+    @Override
+    public Rectangle getArea() {
+        int minx = 0, maxx = 0;
+        int miny = 0, maxy = 0;
+
+        Rectangle r;
+        for (com.lirfu.lirfugraph.Component c : rows) {
+            r = c.getArea();
+
+            if (minx > r.x)
+                minx = r.x;
+            if (maxx < r.x + r.width)
+                maxx = r.x + r.width;
+            if (miny > r.y)
+                miny = r.y;
+            if (maxy < r.y + r.height)
+                maxy = r.y + r.height;
+        }
+
+        return new Rectangle(minx, miny, maxx - minx, maxy - miny);
     }
 }

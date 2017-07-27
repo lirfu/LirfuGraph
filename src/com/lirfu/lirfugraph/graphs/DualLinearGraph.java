@@ -1,11 +1,11 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DualLinearAbstractGraph extends AbstractGraph {
+public class DualLinearGraph extends AbstractGraph {
 	private int maxDrawnPoints;
 	private final int numberOfHorizontals = 5;
 
@@ -16,7 +16,7 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 	private boolean iterationsSet = false;
 	private String title;
 
-	public DualLinearAbstractGraph(String title) {
+	public DualLinearGraph(String title) {
 
 		this.title = title;
 		this.points1 = new ArrayList<>();
@@ -30,6 +30,8 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 
 	@Override
 	public void paint(Graphics g) {
+		setDirty(false);
+
 		ArrayList<Double> list1 = null;
 		ArrayList<Double> list2 = null;
 		synchronized (points1) {
@@ -39,14 +41,14 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 			list2 = new ArrayList<>(points2);
 		}
 		Dimension size = getAdjustedSize();
-		Point l = template.getLocation();
+		Point l = graph.getLocation();
 
 		if (!iterationsSet)
 			iterations = list1.size();
 
 		if (iterations == 0) {
 			g.setColor(primaryColor);
-			g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
+			g.drawString("EMPTY!", l.x + graph.getWidth() / 4, l.y + graph.getHeight() / 2);
 			return;
 		}
 
@@ -55,7 +57,7 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 
 		if (max == 0) {
 			g.setColor(primaryColor);
-			g.drawString("Max is 0!", l.x + template.getWidth() / 6, l.y + template.getHeight() / 2);
+			g.drawString("Max is 0!", l.x + graph.getWidth() / 6, l.y + graph.getHeight() / 2);
 			return;
 		}
 
@@ -75,8 +77,8 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 		drawTitleAndFrame(g, title);
 
 		g.drawString("" + iterations, l.x + padding + size.width - 10, l.y + size.height - 10 + 2 * padding); // max iteration
-		g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
-		g.drawString("Min: " + min, l.x + template.getWidth() / 2, l.y + size.height + padding + 13);
+		g.drawString("Max: " + max, l.x + graph.getWidth() / 2, l.y + padding - 3);
+		g.drawString("Min: " + min, l.x + graph.getWidth() / 2, l.y + size.height + padding + 13);
 
 		// First value
 		double lastValue1 = list1.get(0);
@@ -87,9 +89,9 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 		AffineTransform old = g2.getTransform();
 		g2.rotate(-Math.PI / 2);
 		g2.setColor(primaryColor);
-		g2.drawString("" + lastValue1, -l.y - template.getHeight() + padding, l.x + padding - 5);
+		g2.drawString("" + lastValue1, -l.y - graph.getHeight() + padding, l.x + padding - 5);
 		g2.setColor(secondaryColor);
-		g2.drawString("" + lastValue2, -l.y - template.getHeight() + padding, l.x + padding - 16);
+		g2.drawString("" + lastValue2, -l.y - graph.getHeight() + padding, l.x + padding - 16);
 		g2.setTransform(old);
 
 		// Draw the curve
@@ -111,15 +113,17 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 				// The last value
 		g2.rotate(Math.PI / 2);
 		g2.setColor(primaryColor);
-		g2.drawString("" + lastValue1, l.y + padding, -l.x + padding - 5 - template.getWidth());
+		g2.drawString("" + lastValue1, l.y + padding, -l.x + padding - 5 - graph.getWidth());
 		g2.setColor(secondaryColor);
-		g2.drawString("" + lastValue2, l.y + padding, -l.x + padding - 16 - template.getWidth());
+		g2.drawString("" + lastValue2, l.y + padding, -l.x + padding - 16 - graph.getWidth());
 		g2.setTransform(old);
 	}
 
 	public void add(double value1, double value2) {
 		points1.add(value1);
 		points2.add(value2);
+
+		setDirty(true);
 		//		synchronized (points1 ) {
 		//			//			System.out.println("Size " + points.size() + " max " + maxDrawnPoints);
 		//			if (points.size() > 0 && maxDrawnPoints > 0 && points.size() > maxDrawnPoints)
@@ -129,12 +133,12 @@ public class DualLinearAbstractGraph extends AbstractGraph {
 	}
 
 	public void setSize(Dimension d) {
-		template.setSize(d);
+		graph.setSize(d);
 		maxDrawnPoints = d.width - 2 * padding;
 	}
 
 	public void setSize(int width, int height) {
-		template.setSize(width, height);
+		graph.setSize(width, height);
 		maxDrawnPoints = width - 2 * padding;
 		//		System.out.println("Size " + maxDrawnPoints);
 	}

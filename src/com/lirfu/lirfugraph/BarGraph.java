@@ -28,6 +28,9 @@ public class BarGraph extends GraphTemplate {
         int rectWidth = size.width / values.size() / 2;
         double max = Collections.max(values);
 
+        // Draw max y value.
+        g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
+
         if (rectWidth > 7) {
 
             AffineTransform old = g2.getTransform();

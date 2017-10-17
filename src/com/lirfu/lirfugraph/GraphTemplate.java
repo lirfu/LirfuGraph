@@ -5,9 +5,9 @@ import java.awt.*;
 
 public abstract class GraphTemplate implements Component {
     protected static int padding = 25;
-    protected Color interfaceColor = Color.decode("0x999999");
-    protected Color primaryColor = Color.decode("0x0000ff");
-    protected Color secondaryColor = Color.decode("0xff0000");
+    protected Color interfaceColor = Color.decode("0xb0b0b0");
+    protected Color primaryColor = Color.decode("0x2292df");
+    protected Color secondaryColor = Color.decode("0xdf2222");
 
     protected JPanel template;
 
@@ -15,6 +15,7 @@ public abstract class GraphTemplate implements Component {
         template = new JPanel() {
             @Override
             public void paint(Graphics g) {
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));
                 GraphTemplate.this.paint(g);
             }
         };
@@ -39,7 +40,6 @@ public abstract class GraphTemplate implements Component {
 
     public GraphTemplate setPadding(int padding) {
         GraphTemplate.padding = padding;
-
         return this;
     }
 

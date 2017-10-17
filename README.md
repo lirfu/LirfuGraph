@@ -19,6 +19,10 @@ Graphs currenty supported:
 
 * `DualLinearGraph`
   * A `LinearGraph` with two simultaneous lines of different colors.
+  
+* `MultiLinearGraph`
+  * A `LinearGraph` with more simultaneous lines of different colors.
+  * Configurable titles (accordingly colored)
 
 * `DialGraph`
   * Displaying a single angle on a circle.
@@ -39,7 +43,7 @@ container.addRow(row);
 
 Next add some graphs to the row:
 ```java
-GraphTemplate graph = new BarGraph("Graph name");
+BarGraph graph = new BarGraph("Graph name");
 row.addGraph(graph);
 ```
 
@@ -57,7 +61,7 @@ new Window(container, true, true);
 ### The short way:
 First build the graph:
 ```java
-GraphTemplate graph = new DualLinearGraph("Graph name");
+DualLinearGraph graph = new DualLinearGraph("Graph name");
 for(int i = 0; i <= 10; i++)
   graph.add((i-5), (i-5)(i-5));
 ```

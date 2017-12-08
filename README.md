@@ -22,10 +22,18 @@ Graphs currenty supported:
   
 * `MultiLinearGraph`
   * A `LinearGraph` with more simultaneous lines of different colors.
-  * Configurable titles (accordingly colored)
+  * Configurable titles (accordingly colored).
 
 * `DialGraph`
   * Displaying a single angle on a circle.
+  
+* `ScatterGraph`
+  * Displaying a set of points on a 2D graph.
+  * Simultaneous sets of points on the same graph.
+  * Configurable titles (accordingly colored).
+
+* `EmptySpace`
+  * An empty area for better organization
 
 ## How to use it?
 ### The long way:

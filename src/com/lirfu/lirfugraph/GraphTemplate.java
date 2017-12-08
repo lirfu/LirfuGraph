@@ -8,6 +8,8 @@ public abstract class GraphTemplate implements Component {
     protected Color interfaceColor = Color.decode("0xb0b0b0");
     protected Color primaryColor = Color.decode("0x2292df");
     protected Color secondaryColor = Color.decode("0xdf2222");
+    protected Color[] colorPalette = {primaryColor, secondaryColor, Color.green, Color.orange, Color.pink, Color.white, Color.cyan, Color.magenta};
+
 
     protected JPanel template;
 

@@ -1,22 +1,27 @@
 package com.lirfu.lirfugraph;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MultiLinearGraph extends GraphTemplate {
     private ArrayList<Double>[] points;
+    private String name;
     private String[] titles;
-    private Color[] colors = {primaryColor, secondaryColor, Color.green, Color.orange, Color.pink, Color.white, Color.lightGray};
 
+    private Double maxX;
+    private Double minX;
     private Double maxY;
     private Double minY;
     private int dotSize = 6;
     private boolean showDots = true;
 
     public MultiLinearGraph(int numberOfGraphs, String... titles) {
+        this("", numberOfGraphs, titles);
+    }
 
+    public MultiLinearGraph(String name, int numberOfGraphs, String... titles) {
+        this.name = name;
         this.titles = titles;
         this.points = new ArrayList[numberOfGraphs];
         for (int i = 0; i < numberOfGraphs; i++)
@@ -55,6 +60,10 @@ public class MultiLinearGraph extends GraphTemplate {
                 mins.add(Collections.min(point));
             min = Collections.min(mins);
         }
+        if (maxX == null)
+            maxX = (double) points.length;
+        if (minX == null)
+            minX = 1.;
 
         double delta = (double) size.width / (iterations - 1);
         double zoom = 1;
@@ -62,12 +71,12 @@ public class MultiLinearGraph extends GraphTemplate {
             zoom = size.height / (max - min);
 
         // Draw only frame.
-        drawTitleAndFrame(g, "");
+        drawTitleAndFrame(g, name);
 
-        // Draw titles in corresponding colors.
-        int titleOffset = 0;
+        // Draw titles in corresponding colorPalette.
+        int titleOffset = 70;
         for (int i = 0; i < titles.length; i++) {
-            g.setColor(colors[i % colors.length]);
+            g.setColor(colorPalette[i % colorPalette.length]);
             g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);
             titleOffset += (1 + titles[i].length()) * g.getFontMetrics().charWidth('a');
         }
@@ -87,14 +96,18 @@ public class MultiLinearGraph extends GraphTemplate {
         for (int i = 1; i < points[0].size(); i++) {
             for (int j = 0; j < points.length; j++) {
                 double val = points[j].get(i);
-                g.setColor(colors[j % colors.length]);
+                g.setColor(colorPalette[j % colorPalette.length]);
                 g.drawLine(l.x + (int) currentx, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding, l.x + (int) (currentx + delta), l.y + (int) (size.height - (val - min) * zoom) + padding);
                 if (showDots)
                     g.fillOval(l.x + (int) currentx - dotSize / 2, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding - dotSize / 2, dotSize, dotSize);
                 lastValues[j] = val;
             }
+
             currentx += delta;
         }
+
+        g.drawString("" + minX, l.x, l.y + size.height + 2 * padding);
+        g.drawString("" + maxX, l.x + size.width, l.y + size.height + 2 * padding);
     }
 
     public void add(double... values) {
@@ -103,6 +116,16 @@ public class MultiLinearGraph extends GraphTemplate {
 
         for (int i = 0; i < values.length; i++)
             points[i].add(values[i]);
+    }
+
+    public MultiLinearGraph setMaxX(double max) {
+        maxX = max;
+        return this;
+    }
+
+    public MultiLinearGraph setMinX(double min) {
+        minX = min;
+        return this;
     }
 
     public MultiLinearGraph setMaxY(double max) {
@@ -117,6 +140,11 @@ public class MultiLinearGraph extends GraphTemplate {
 
     public MultiLinearGraph setShowDots(boolean showDots) {
         this.showDots = showDots;
+        return this;
+    }
+
+    public MultiLinearGraph setName(String name) {
+        this.name = name;
         return this;
     }
 }

@@ -1,5 +1,6 @@
 package com.lirfu.lirfugraph;
 
+import javax.sound.sampled.Line;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -10,6 +11,8 @@ public class LinearGraph extends GraphTemplate {
     private final ArrayList<Double> points = new ArrayList<>();
 
     private int maxDrawnPoints;
+    private Double maxX;
+    private Double minX;
     private Double maxY;
     private Double minY;
     private String title;
@@ -48,6 +51,10 @@ public class LinearGraph extends GraphTemplate {
             min = minY;
         else
             min = Collections.min(list);
+        if (maxX == null)
+            maxX = (double) list.size();
+        if (minX == null)
+            minX = 1.;
 
         // Pixel distance between points.
         double delta = (double) size.width / (points.size() - 1);
@@ -71,14 +78,16 @@ public class LinearGraph extends GraphTemplate {
             if (showDots)
                 g.fillOval(l.x + (int) currentx - dotSize / 2, l.y + (int) (size.height - (lastValue - min) * zoom) + padding - dotSize / 2, dotSize, dotSize);
             if (showValues)
-                g.drawString(lastValue + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
+//                g.drawString(lastValue + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
+                g.drawString((minX + i - 1) + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
             lastValue = val;
             currentx += delta;
         }
         if (showDots)
             g.fillOval(l.x + (int) currentx - dotSize / 2, l.y + (int) (size.height - (lastValue - min) * zoom) + padding - dotSize / 2, dotSize, dotSize);
         if (showValues)
-            g.drawString(lastValue + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
+//            g.drawString(lastValue + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
+            g.drawString(maxX + "", l.x + (int) currentx - dotSize / 2, l.y + template.getHeight() - 8);
     }
 
     public void add(double value) {
@@ -89,6 +98,16 @@ public class LinearGraph extends GraphTemplate {
                 for (int i = 0; i < points.size(); i += 2)
                     points.remove(i);
         }
+    }
+
+    public LinearGraph setMaxX(double max) {
+        maxX = max;
+        return this;
+    }
+
+    public LinearGraph setMinX(double min) {
+        minX = min;
+        return this;
     }
 
     public LinearGraph setMaxY(double max) {

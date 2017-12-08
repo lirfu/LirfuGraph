@@ -54,12 +54,17 @@ public class Window {
         frame.setVisible(visibility);
     }
 
-    public void setTitle(String title) {
+    public Window setTitle(String title) {
         frame.setTitle(title);
+        return this;
     }
 
     public Window setSize(Dimension size) {
         frame.setSize(size);
+        return this;
+    }
+    public Window setLocation(Point p){
+        frame.setLocation(p);
         return this;
     }
 }

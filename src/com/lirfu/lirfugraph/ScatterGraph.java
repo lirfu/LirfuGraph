@@ -2,25 +2,25 @@ package com.lirfu.lirfugraph;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ScatterGraph extends GraphTemplate {
-    private final ArrayList<Dot>[] dots;
+    private ArrayList<Point2D>[] points;
 
     private Double maxX;
     private Double minX;
     private Double maxY;
     private Double minY;
     private String[] titles;
+    private boolean invertY = false;
 
-    private int dotSize = 6;
+    private int pointSize = 6;
 
     public ScatterGraph(String... titles) {
         this.titles = titles;
 
-        dots = new ArrayList[titles.length];
+        points = new ArrayList[titles.length];
         for (int i = 0; i < titles.length; i++)
-            dots[i] = new ArrayList<>();
+            points[i] = new ArrayList<>();
 
     }
 
@@ -39,14 +39,14 @@ public class ScatterGraph extends GraphTemplate {
 
         // Find y extremes.
         if (minX == null || minY == null) {
-            Dot min = min();
+            Point2D min = min();
             if (minX == null)
                 minX = min.x;
             if (minY == null)
                 minY = min.y;
         }
         if (maxX == null || maxY == null) {
-            Dot max = max();
+            Point2D max = max();
             if (maxX == null)
                 maxX = max.x;
             if (maxY == null)
@@ -70,36 +70,39 @@ public class ScatterGraph extends GraphTemplate {
         g.setColor(super.interfaceColor);
         g.drawString("Min: (" + minX + ", " + minY + ")   Max: (" + maxX + ", " + maxY + ")", l.x + size.width / 3, l.y + padding - 3);
 
-        // Draw dots.
+        // Draw points.
         g.setColor(super.primaryColor);
-        for (int i = 0; i < dots.length; i++) {
+        for (int i = 0; i < points.length; i++) {
             g.setColor(colorPalette[i % colorPalette.length]);
-            for (Dot d : dots[i])
-                g.fillOval((int) (l.x + padding + (d.x - minX) * zoomX - dotSize / 2), (int) (l.y + padding + (maxY - d.y) * zoomY - dotSize / 2), dotSize, dotSize);
+            for (Point2D d : points[i])
+                if (invertY)
+                    g.fillOval((int) (l.x + padding + (d.x - minX) * zoomX - pointSize / 2), (int) (l.y + padding + (maxY - d.y) * zoomY - pointSize / 2), pointSize, pointSize);
+                else
+                    g.fillOval((int) (l.x + padding + (d.x - minX) * zoomX - pointSize / 2), (int) (l.y + padding + (d.y - minY) * zoomY - pointSize / 2), pointSize, pointSize);
         }
     }
 
     private boolean empty() {
-        for (ArrayList<Dot> list : dots)
+        for (ArrayList<Point2D> list : points)
             if (list.size() > 0)
                 return false;
         return true;
     }
 
-    private Dot max() {
-        Dot m = new Dot(dots[0].get(0));
-        for (ArrayList<Dot> list : dots)
-            for (Dot d : list) {
+    private Point2D max() {
+        Point2D m = new Point2D(points[0].get(0));
+        for (ArrayList<Point2D> list : points)
+            for (Point2D d : list) {
                 if (m.x < d.x) m.x = d.x;
                 if (m.y < d.y) m.y = d.y;
             }
         return m;
     }
 
-    private Dot min() {
-        Dot m = new Dot(dots[0].get(0));
-        for (ArrayList<Dot> list : dots)
-            for (Dot d : list) {
+    private Point2D min() {
+        Point2D m = new Point2D(points[0].get(0));
+        for (ArrayList<Point2D> list : points)
+            for (Point2D d : list) {
                 if (m.x > d.x) m.x = d.x;
                 if (m.y > d.y) m.y = d.y;
             }
@@ -108,15 +111,15 @@ public class ScatterGraph extends GraphTemplate {
 
 
     public void add(int graphIndex, double x, double y) {
-        add(graphIndex, new Dot(x, y));
+        add(graphIndex, new Point2D(x, y));
     }
 
-    public void add(int graphIndex, Dot point) {
-        dots[graphIndex].add(point);
+    public void add(int graphIndex, Point2D point) {
+        points[graphIndex].add(point);
     }
 
-    public ScatterGraph setDotSize(int diameter) {
-        dotSize = diameter;
+    public ScatterGraph setPointSize(int diameter) {
+        pointSize = diameter;
         return this;
     }
 
@@ -140,31 +143,17 @@ public class ScatterGraph extends GraphTemplate {
         return this;
     }
 
-    public static class Dot {
-        double x;
-        double y;
+    public void clear() {
+        points = new ArrayList[titles.length];
+        for (int i = 0; i < titles.length; i++)
+            points[i] = new ArrayList<>();
+    }
 
-        public Dot(Dot d) {
-            this.x = d.x;
-            this.y = d.y;
-        }
+    public void setInvertY(boolean invertY) {
+        this.invertY = invertY;
+    }
 
-        public Dot(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        @Override
-        public String toString() {
-            return '(' + x + ", " + y + ')';
-        }
+    public void setTitles(String... titles) {
+        this.titles = titles;
     }
 }

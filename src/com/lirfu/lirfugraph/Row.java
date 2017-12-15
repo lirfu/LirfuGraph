@@ -8,9 +8,9 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class Row implements Component {
+public class Row extends Component {
     private JPanel panel;
-    private LinkedList<GraphTemplate> graphs;
+    private LinkedList<Component> graphs;
 
     public Row() {
         this.panel = new JPanel() {
@@ -18,15 +18,31 @@ public class Row implements Component {
             public void paint(Graphics g) {
                 Point l = getLocation();
 
-                int singleWidth = getWidth() / graphs.size();
-                int counter = 0;
+                int availableWidth = getWidth();
+                int scalableGraphs = graphs.size();
+                for (Component gr : graphs)
+                    if (gr.fixedSize != null) {
+                        availableWidth -= gr.fixedSize.width;
+                        scalableGraphs--;
 
-                for (GraphTemplate gr : graphs) {
-                    gr.getComponent().setSize(singleWidth, getHeight());
-                    gr.getComponent().setLocation(counter * singleWidth + l.x, l.y);
+                        if (getHeight() < gr.fixedSize.height)
+                            fixedSize = new Dimension(getWidth(), gr.fixedSize.height);
+                    }
+
+                int singleWidth = scalableGraphs > 0 ? availableWidth / scalableGraphs : 0;
+                int height = fixedSize == null ? getHeight() : fixedSize.height;
+
+                int widthCounter = l.x;
+                for (Component gr : graphs) {
+                    gr.getComponent().setLocation(widthCounter, l.y);
+                    if (gr.fixedSize != null) {
+                        gr.getComponent().setSize(gr.fixedSize);
+                        widthCounter += gr.fixedSize.width;
+                    } else {
+                        gr.getComponent().setSize(singleWidth, height);
+                        widthCounter += singleWidth;
+                    }
                     gr.getComponent().paint(g);
-
-                    counter++;
                 }
             }
         };
@@ -34,14 +50,14 @@ public class Row implements Component {
         this.graphs = new LinkedList<>();
     }
 
-    public Row(GraphTemplate... graphs) {
+    public Row(Component... graphs) {
         this();
 
-        for (GraphTemplate g : graphs)
-            addGraph(g);
+        for (Component g : graphs)
+            addComponent(g);
     }
 
-    public Row addGraph(GraphTemplate g) {
+    public Row addComponent(Component g) {
         graphs.add(g);
 
         for (MouseListener l : g.getComponent().getMouseListeners())
@@ -51,11 +67,20 @@ public class Row implements Component {
         for (KeyListener l : g.getComponent().getKeyListeners())
             panel.addKeyListener(l);
 
+        g.setRepaintManager(repaintManager);
+
         return this;
     }
 
     @Override
     public java.awt.Component getComponent() {
         return panel;
+    }
+
+    @Override
+    void setRepaintManager(RepaintManager manager) {
+        repaintManager = manager;
+        for (Component g : graphs)
+            g.setRepaintManager(manager);
     }
 }

@@ -17,8 +17,8 @@ public class LinearGraph extends GraphTemplate {
     private Double minY;
     private String title;
 
-    private boolean showDots = true;
-    private boolean showValues = true;
+    private boolean showDots = false;
+    private boolean showValues = false;
     private final int dotSize = 6;
 
     public LinearGraph(String title) {

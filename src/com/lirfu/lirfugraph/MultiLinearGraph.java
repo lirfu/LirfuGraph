@@ -35,9 +35,12 @@ public class MultiLinearGraph extends GraphTemplate {
 
         int iterations = points[0].size();
 
+        // Draw only frame.
+        drawTitleAndFrame(g, name);
+
         if (iterations == 0) {
             g.setColor(primaryColor);
-            g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
+            g.drawString("EMPTY!", l.x + padding + size.width / 2 - (int) (3 * g.getFont().getSize() * 0.4), l.y + padding + size.height / 2);
             return;
         }
 
@@ -69,9 +72,6 @@ public class MultiLinearGraph extends GraphTemplate {
         double zoom = 1;
         if (max != 0)
             zoom = size.height / (max - min);
-
-        // Draw only frame.
-        drawTitleAndFrame(g, name);
 
         // Draw titles in corresponding colorPalette.
         int titleOffset = 70;
@@ -146,5 +146,11 @@ public class MultiLinearGraph extends GraphTemplate {
     public MultiLinearGraph setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public void clear() {
+        this.points = new ArrayList[points.length];
+        for (int i = 0; i < points.length; i++)
+            points[i] = new ArrayList<>();
     }
 }

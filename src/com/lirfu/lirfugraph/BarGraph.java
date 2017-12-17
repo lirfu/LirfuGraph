@@ -11,6 +11,7 @@ public class BarGraph extends GraphTemplate {
     private String title;
     public LinkedList<Double> values;
     private LinkedList<String> names;
+    private Double mMaxY;
 
     public BarGraph(String title) {
         values = new LinkedList<>();
@@ -35,7 +36,12 @@ public class BarGraph extends GraphTemplate {
         }
 
         int rectWidth = size.width / values.size() / 2;
-        double max = Collections.max(values);
+
+        double max;
+        if (mMaxY == null)
+            max = Collections.max(values);
+        else
+            max = mMaxY;
 
         // Draw max y value.
         g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
@@ -50,12 +56,12 @@ public class BarGraph extends GraphTemplate {
                 // Draw the label
                 g.setColor(interfaceColor);
                 g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));
-                g2.drawString(names.get(i) + " = "+Tools.round(values.get(i), 3), -(padding - 5 + l.y + size.height),(int) (rectWidth * (2 * i+1) + padding + l.x - 12));
+                g2.drawString(names.get(i) + " = " + Tools.round(values.get(i), 3), -(padding - 5 + l.y + size.height), (int) (rectWidth * (2 * i + 1) + padding + l.x - 12));
 
                 g2.setTransform(old);
 
                 // Draw the bar.
-                g.setColor(colorPalette[i%colorPalette.length]);
+                g.setColor(colorPalette[i % colorPalette.length]);
                 g.fillRect(rectWidth * (2 * i + 1) + padding + l.x, (int) ((1 - values.get(i) / max) * size.height) + padding + l.y, rectWidth, (int) (values.get(i) / max * size.height));
 
             }
@@ -80,5 +86,10 @@ public class BarGraph extends GraphTemplate {
     public void clear() {
         values = new LinkedList<>();
         names = new LinkedList<>();
+    }
+
+    public BarGraph setMaxY(Double maxY) {
+        this.mMaxY = maxY;
+        return this;
     }
 }

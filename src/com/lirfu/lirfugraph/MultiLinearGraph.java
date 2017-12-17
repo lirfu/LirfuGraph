@@ -2,6 +2,7 @@ package com.lirfu.lirfugraph;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class MultiLinearGraph extends GraphTemplate {
@@ -63,8 +64,12 @@ public class MultiLinearGraph extends GraphTemplate {
                 mins.add(Collections.min(point));
             min = Collections.min(mins);
         }
-        if (maxX == null)
-            maxX = (double) points.length;
+        if (maxX == null) {
+            maxX = 0.;
+            for (ArrayList a : points)
+                if (maxX < a.size())
+                    maxX = (double)a.size();
+        }
         if (minX == null)
             minX = 1.;
 

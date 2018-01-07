@@ -38,7 +38,8 @@ public class Label extends GraphTemplate {
         this.title = title;
     }
 
-    public void setContent(String content) {
+    public Label setContent(String content) {
         this.contentLines = content.split("\n");
+        return this;
     }
 }

@@ -1,6 +1,9 @@
 package com.lirfu.demo;
 
 import com.lirfu.lirfugraph.*;
+import com.lirfu.lirfugraph.Window;
+
+import java.awt.*;
 
 /**
  * Created by lirfu on 16.03.17..
@@ -32,7 +35,9 @@ public class Demo {
         b.add("2017.", 90);
 
         ScatterGraph sc = new ScatterGraph("Scatter");
-        container.addRow(new Row(sc, new EmptySpace()));
+        Surface2DGraph surf = new Surface2DGraph("Surface2D", input -> Math.sin(.1 * input.x) * Math.cos(2 * input.y), new Surface2DGraph.Bounds(-5, 5, -5, 5));
+        surf.setMinZ(0.);
+        container.addRow(new Row(sc, surf));
 
         sc.add(0, 0, 0);
         sc.add(0, 10, 10);
@@ -44,6 +49,6 @@ public class Demo {
         sc.add(0, 50, 60);
         sc.add(0, 100, 100);
 
-        new Window(container, true, true).setTitle("Showcase");
+        new Window(container, true, true).setTitle("Showcase").setSize(new Dimension(800, 800));
     }
 }

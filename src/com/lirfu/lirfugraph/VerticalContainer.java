@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 public class VerticalContainer extends Component {
+    private String title;
     private JPanel container;
     private LinkedList<Row> rows;
 
@@ -44,6 +45,10 @@ public class VerticalContainer extends Component {
                     }
                     r.getComponent().paint(g);
                 }
+
+                if (title != null)
+                    g.drawString(title, (int) (l.x + (getWidth() - title.length() * Config.FONT_SIZE) / 2f), l.y + 8);
+
             }
         };
 
@@ -69,6 +74,11 @@ public class VerticalContainer extends Component {
 
         row.setRepaintManager(repaintManager);
 
+        return this;
+    }
+
+    public VerticalContainer setTitle(String title) {
+        this.title = title;
         return this;
     }
 

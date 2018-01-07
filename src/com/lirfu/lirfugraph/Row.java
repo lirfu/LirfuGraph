@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 public class Row extends Component {
     private JPanel panel;
     private LinkedList<Component> graphs;
+    private String title;
 
     public Row() {
         this.panel = new JPanel() {
@@ -43,6 +44,14 @@ public class Row extends Component {
                         widthCounter += singleWidth;
                     }
                     gr.getComponent().paint(g);
+                }
+
+                if (title != null) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    double rotation = Math.toRadians(90);
+                    g2.rotate(-rotation);
+                    g2.drawString(title, -(l.y + (title.length() * Config.FONT_SIZE + getHeight()) / 2f), l.x + 8);
+                    g2.rotate(rotation);
                 }
             }
         };
@@ -82,5 +91,10 @@ public class Row extends Component {
         repaintManager = manager;
         for (Component g : graphs)
             g.setRepaintManager(manager);
+    }
+
+    public Row setTitle(String title) {
+        this.title = title;
+        return this;
     }
 }

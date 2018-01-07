@@ -20,6 +20,7 @@ public abstract class GraphTemplate extends Component {
             public void paint(Graphics g) {
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));
                 GraphTemplate.this.paint(g);
+                g.setColor(interfaceColor);
             }
         };
     }

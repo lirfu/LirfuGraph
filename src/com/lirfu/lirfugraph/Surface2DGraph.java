@@ -14,6 +14,8 @@ public class Surface2DGraph extends GraphTemplate {
     private Double minZ;
     private String title;
 
+    private Canvas cnv;
+
     public Surface2DGraph(String title, Function function, Bounds bounds) {
         this.title = title;
         this.function = function;
@@ -23,46 +25,59 @@ public class Surface2DGraph extends GraphTemplate {
         this.maxY = bounds.maxY;
     }
 
+    private void redrawCanvas() {
+        cnv = new Canvas() {
+            @Override
+            public void paint(Graphics g) {
+                // Area parameters for drawing.
+                Dimension size = new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
+                Point l = template.getLocation();
+
+                // Find extremes.
+                double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+                for (double x = minX; x <= maxX; x += (maxX - minX) / (double) size.width) {
+                    for (double y = minY; y <= maxY; y += (maxY - minY) / (double) size.height) {
+                        float value = (float) function.calculate(new Point2D(x, y));
+                        if (minZ == null && min > value)
+                            min = value;
+                        if (maxZ == null && max < value)
+                            max = value;
+                    }
+                }
+
+                if (minZ != null)
+                    min = minZ;
+                if (maxZ != null)
+                    max = maxZ;
+
+                drawTitleAndFrame(g, title);
+
+                g.drawString("Max: " + Utils.round(max, 2), l.x + padding + size.width / 2, l.y + padding - 3);
+                g.drawString("Min: " + Utils.round(min, 2), l.x + padding + size.width / 2, l.y + padding + size.height + 13);
+
+                // First value.
+                for (int x = 0; x < size.width; x++) {
+                    for (int y = 0; y < size.height; y++) {
+                        Point2D p = new Point2D(
+                                minX + x * (maxX - minX) / size.width,
+                                minY + y * (maxY - minY) / size.height
+                        );
+                        double value = function.calculate(p);
+                        setColor(g, min, max, value);
+                        g.fillRect(l.x + padding + x, l.y + padding + size.height - y, 1, 1);
+                    }
+                }
+            }
+        };
+        isDirty = false;
+    }
+
     @Override
     public void paint(Graphics g) {
-        // Area parameters for drawing.
-        Dimension size = new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
-        Point l = template.getLocation();
+        if (isDirty)
+            redrawCanvas();
 
-        // Find extremes.
-        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (double x = minX; x <= maxX; x += (maxX - minX) / (double) size.width) {
-            for (double y = minY; y <= maxY; y += (maxY - minY) / (double) size.height) {
-                float value = (float) function.calculate(new Point2D(x, y));
-                if (minZ == null && min > value)
-                    min = value;
-                if (maxZ == null && max < value)
-                    max = value;
-            }
-        }
-
-        if (minZ != null)
-            min = minZ;
-        if (maxZ != null)
-            max = maxZ;
-
-        drawTitleAndFrame(g, title);
-
-        g.drawString("Max: " + round(max, 2), l.x + padding + size.width / 2, l.y + padding - 3);
-        g.drawString("Min: " + round(min, 2), l.x + padding + size.width / 2, l.y + padding + size.height + 13);
-
-        // First value.
-        for (int x = 0; x < size.width; x++) {
-            for (int y = 0; y < size.height; y++) {
-                Point2D p = new Point2D(
-                        minX + x * (maxX - minX) / size.width,
-                        minY + y * (maxY - minY) / size.height
-                );
-                double value = function.calculate(p);
-                setColor(g, min, max, value);
-                g.fillRect(l.x + padding + x, l.y + padding + size.height - y, 1, 1);
-            }
-        }
+        cnv.paint(g);
     }
 
     private void setColor(Graphics g, double min, double max, double value) {
@@ -76,43 +91,49 @@ public class Surface2DGraph extends GraphTemplate {
         if (percentage > 0f)
             g.setColor(new Color(1, 1, 1, percentage));
         else
-            g.setColor(new Color(1, 0, 0, -percentage));
+            g.setColor(new Color(0, 0, 1, -percentage));
     }
 
     public Surface2DGraph setMaxX(double max) {
         maxX = max;
+        isDirty = true;
         return this;
     }
 
     public Surface2DGraph setMinX(double min) {
         minX = min;
+        isDirty = true;
         return this;
     }
 
     public Surface2DGraph setMaxY(double max) {
         maxY = max;
+        isDirty = true;
         return this;
     }
 
     public Surface2DGraph setMinY(double min) {
         minY = min;
+        isDirty = true;
         return this;
     }
 
-    public void setMaxZ(Double maxZ) {
+    public Surface2DGraph setMaxZ(Double maxZ) {
         this.maxZ = maxZ;
+        isDirty = true;
+        return this;
     }
 
-    public void setMinZ(Double minZ) {
+    public Surface2DGraph setMinZ(Double minZ) {
         this.minZ = minZ;
+        isDirty = true;
+        return this;
     }
 
-    public void setSize(Dimension d) {
+    public Surface2DGraph setSize(Dimension d) {
         template.setSize(d);
-    }
-
-    public static double round(double value, int precision) {
-        return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
+        isDirty = true;
+        return this;
     }
 
     public interface Function {

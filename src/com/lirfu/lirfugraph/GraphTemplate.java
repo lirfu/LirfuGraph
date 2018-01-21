@@ -11,11 +11,12 @@ public abstract class GraphTemplate extends Component {
     protected Color secondaryColor = Color.decode("0xdf2222");
     protected Color[] colorPalette = {primaryColor, secondaryColor, Color.green, Color.orange, Color.pink, Color.white, Color.cyan, Color.magenta};
 
+    protected boolean isDirty = true;
 
-    protected JPanel template;
+    protected Canvas template;
 
     protected GraphTemplate() {
-        template = new JPanel() {
+        template = new Canvas() {
             @Override
             public void paint(Graphics g) {
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));

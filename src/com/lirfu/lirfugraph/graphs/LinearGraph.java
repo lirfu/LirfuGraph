@@ -1,6 +1,7 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
-import javax.sound.sampled.Line;
+import com.lirfu.lirfugraph.GraphTemplate;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;

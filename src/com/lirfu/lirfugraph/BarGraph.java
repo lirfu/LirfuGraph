@@ -1,6 +1,6 @@
 package com.lirfu.lirfugraph;
 
-import sun.font.FontScaler;
+import com.lirfu.lirfugraph.graphs.LinearGraph;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

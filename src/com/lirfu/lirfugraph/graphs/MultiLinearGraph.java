@@ -1,8 +1,9 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
+
+import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class MultiLinearGraph extends GraphTemplate {

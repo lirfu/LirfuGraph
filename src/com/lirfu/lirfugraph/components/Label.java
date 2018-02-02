@@ -1,4 +1,7 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.components;
+
+import com.lirfu.lirfugraph.Config;
+import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
 

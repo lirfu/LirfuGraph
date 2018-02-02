@@ -1,5 +1,10 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
+
+import com.lirfu.lirfugraph.Config;
+import com.lirfu.lirfugraph.GraphTemplate;
+import com.lirfu.lirfugraph.Point2D;
+import com.lirfu.lirfugraph.Utils;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,6 +24,7 @@ public class Classification2DGraph extends GraphTemplate {
     private Canvas mCanvas;
     private int circleSize = 5;
     private Bounds bounds;
+    private boolean keepAspectRatio = false;
 
     public Classification2DGraph(String title) {
         this.mTitle = title;
@@ -48,6 +54,14 @@ public class Classification2DGraph extends GraphTemplate {
                 Point l = template.getLocation();
 
                 bounds = Bounds.calculate(Classification2DGraph.this);
+
+                if (keepAspectRatio) {
+                    if (bounds.maxX - bounds.minX >= bounds.maxY - bounds.minY)
+                        bounds.maxY = bounds.minY + bounds.maxX - bounds.minX;
+                    else
+                        bounds.maxX = bounds.minX + bounds.maxY - bounds.minY;
+                }
+
 
                 drawTitleAndFrame(g, mTitle);
 
@@ -109,6 +123,12 @@ public class Classification2DGraph extends GraphTemplate {
         return this;
     }
 
+    public Classification2DGraph keepAspectRatio(boolean keep) {
+        keepAspectRatio = keep;
+        isDirty = true;
+        return this;
+    }
+
     public Classification2DGraph setSize(Dimension d) {
         template.setSize(d);
         isDirty = true;
@@ -116,10 +136,10 @@ public class Classification2DGraph extends GraphTemplate {
     }
 
     public static class Bounds {
-        public final double minX;
-        public final double maxX;
-        public final double minY;
-        public final double maxY;
+        public double minX;
+        public double maxX;
+        public double minY;
+        public double maxY;
 
         public Bounds(double minX, double maxX, double minY, double maxY) {
             this.minX = minX;

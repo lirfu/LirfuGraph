@@ -1,4 +1,6 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.components;
+
+import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

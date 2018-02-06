@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public class Row extends Component {
     private JPanel panel;
-    private LinkedList<Component> graphs;
+    private LinkedList<com.lirfu.lirfugraph.Component> graphs;
     private String title;
 
     public Row() {
@@ -21,7 +21,7 @@ public class Row extends Component {
 
                 int availableWidth = getWidth();
                 int scalableGraphs = graphs.size();
-                for (Component gr : graphs)
+                for (com.lirfu.lirfugraph.Component gr : graphs)
                     if (gr.fixedSize != null) {
                         availableWidth -= gr.fixedSize.width;
                         scalableGraphs--;
@@ -34,7 +34,7 @@ public class Row extends Component {
                 int height = fixedSize == null ? getHeight() : fixedSize.height;
 
                 int widthCounter = l.x;
-                for (Component gr : graphs) {
+                for (com.lirfu.lirfugraph.Component gr : graphs) {
                     gr.getComponent().setLocation(widthCounter, l.y);
                     if (gr.fixedSize != null) {
                         gr.getComponent().setSize(gr.fixedSize);
@@ -59,14 +59,14 @@ public class Row extends Component {
         this.graphs = new LinkedList<>();
     }
 
-    public Row(Component... graphs) {
+    public Row(com.lirfu.lirfugraph.Component... graphs) {
         this();
 
-        for (Component g : graphs)
+        for (com.lirfu.lirfugraph.Component g : graphs)
             addComponent(g);
     }
 
-    public Row addComponent(Component g) {
+    public Row addComponent(com.lirfu.lirfugraph.Component g) {
         graphs.add(g);
 
         for (MouseListener l : g.getComponent().getMouseListeners())
@@ -89,7 +89,7 @@ public class Row extends Component {
     @Override
     void setRepaintManager(RepaintManager manager) {
         repaintManager = manager;
-        for (Component g : graphs)
+        for (com.lirfu.lirfugraph.Component g : graphs)
             g.setRepaintManager(manager);
     }
 

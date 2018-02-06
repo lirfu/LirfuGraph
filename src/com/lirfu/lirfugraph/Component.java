@@ -1,5 +1,8 @@
 package com.lirfu.lirfugraph;
 
+import com.lirfu.lirfugraph.themes.DarkTheme;
+import com.lirfu.lirfugraph.themes.LightTheme;
+
 import java.awt.*;
 
 /**
@@ -10,6 +13,24 @@ public abstract class Component {
     protected Integer horizontalWeight = null;
     protected Integer verticalWeight = null;
     protected RepaintManager repaintManager;
+
+    protected static Color backgroundColor;
+    protected static Color interfaceColor;
+    protected static Color primaryColor;
+    protected static Color secondaryColor;
+    protected static Color[] colorPalette;
+
+    protected Component() {
+        setTheme(new LightTheme());
+    }
+
+    public void setTheme(Theme theme) {
+        backgroundColor = theme.getBackgroundColor();
+        interfaceColor = theme.getInterfaceColor();
+        primaryColor = theme.getPrimaryColor();
+        secondaryColor = theme.getSecondaryColor();
+        colorPalette = theme.getColorPalette();
+    }
 
     public void setFixedSize(Dimension size) {
         fixedSize = size;

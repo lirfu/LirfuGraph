@@ -9,7 +9,6 @@ public class Window extends Component {
     private JFrame frame;
 
     private int padding = 10;
-    private Color background = Color.decode("0x000000");
     private Component container;
     private RepaintManager repaintManager;
 
@@ -18,7 +17,7 @@ public class Window extends Component {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                g.setColor(background);
+                g.setColor(backgroundColor);
                 g.fillRect(0, 0, getWidth(), getHeight());
 
                 container.getComponent().setLocation(padding, padding);

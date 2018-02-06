@@ -36,7 +36,7 @@ public class Button extends GraphTemplate {
         Dimension size = getAdjustedSize();
         g.setColor(enabled ? currentColor : Color.LIGHT_GRAY);
         g.fillRoundRect(l.x + padding, l.y + padding, size.width, size.height, 10, 10);
-        g.setColor(backgroundColor);
+        g.setColor(interfaceColor);
         g.setFont(new Font(Font.MONOSPACED, Font.BOLD, Config.BUTTON_FONT_SIZE));
         g.drawString(title, l.x + padding + size.width / 2 - (int) (title.length() * Config.BUTTON_FONT_SIZE * 0.3), l.y + padding + size.height / 2);
     }

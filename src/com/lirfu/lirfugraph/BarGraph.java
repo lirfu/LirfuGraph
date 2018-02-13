@@ -62,7 +62,7 @@ public class BarGraph extends GraphTemplate {
 
                 // Draw the bar.
                 g.setColor(colorPalette[i % colorPalette.length]);
-                g.fillRect(rectWidth * (2 * i + 1) + padding + l.x, (int) ((1 - values.get(i) / max) * size.height) + padding + l.y, rectWidth, (int) (values.get(i) / max * size.height));
+                g.fillRect(rectWidth * (2 * i + 1) + padding + l.x, (int) ((1 - values.get(i) / max) * size.height) + padding + l.y + 1, rectWidth, (int) (values.get(i) / max * size.height));
 
             }
         } else {

@@ -4,7 +4,7 @@ package com.lirfu.lirfugraph.graphs;
 import com.lirfu.lirfugraph.Config;
 import com.lirfu.lirfugraph.GraphTemplate;
 import com.lirfu.lirfugraph.Point2D;
-import com.lirfu.lirfugraph.Utils;
+import com.lirfu.lirfugraph.utils.Tools;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -77,10 +77,10 @@ public class Classification2DGraph extends GraphTemplate {
 
                 g.setColor(interfaceColor);
                 Graphics2D g2 = (Graphics2D) g;
-                g2.drawString(Utils.round(bounds.minX, 4) + "", l.x + padding, l.y + padding + size.height + Config.FONT_SIZE);
-                g2.drawString(Utils.round(bounds.maxX, 4) + "", l.x + padding + size.width - 4 * Config.FONT_SIZE, l.y + padding + size.height + Config.FONT_SIZE);
-                g2.drawString(Utils.round(bounds.minY, 4) + "", l.x, l.y + padding + size.height);
-                g2.drawString(Utils.round(bounds.maxY, 4) + "", l.x, l.y + padding);
+                g2.drawString(Tools.round(bounds.minX, 4) + "", l.x + padding, l.y + padding + size.height + Config.FONT_SIZE);
+                g2.drawString(Tools.round(bounds.maxX, 4) + "", l.x + padding + size.width - 4 * Config.FONT_SIZE, l.y + padding + size.height + Config.FONT_SIZE);
+                g2.drawString(Tools.round(bounds.minY, 4) + "", l.x, l.y + padding + size.height);
+                g2.drawString(Tools.round(bounds.maxY, 4) + "", l.x, l.y + padding);
             }
         };
         isDirty = false;

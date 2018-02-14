@@ -1,6 +1,7 @@
 package com.lirfu.lirfugraph;
 
 import com.lirfu.lirfugraph.graphs.LinearGraph;
+import com.lirfu.lirfugraph.utils.Tools;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

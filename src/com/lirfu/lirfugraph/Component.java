@@ -21,7 +21,7 @@ public abstract class Component {
     protected static Color[] colorPalette;
 
     protected Component() {
-        setTheme(new LightTheme());
+        setTheme(new DarkTheme());
     }
 
     public void setTheme(Theme theme) {

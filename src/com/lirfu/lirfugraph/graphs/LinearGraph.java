@@ -135,4 +135,9 @@ public class LinearGraph extends GraphTemplate {
         template.setSize(d);
         maxDrawnPoints = d.width - 2 * padding;
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

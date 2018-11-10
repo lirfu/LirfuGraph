@@ -135,6 +135,11 @@ public class Classification2DGraph extends GraphTemplate {
         return this;
     }
 
+    @Override
+    protected void calculate() {
+        //TODO
+    }
+
     public static class Bounds {
         public double minX;
         public double maxX;

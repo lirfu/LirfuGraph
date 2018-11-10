@@ -159,4 +159,9 @@ public class ScatterGraph extends GraphTemplate {
     public void setTitles(String... titles) {
         this.titles = titles;
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

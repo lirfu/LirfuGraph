@@ -90,6 +90,12 @@ public class VerticalContainer extends Component {
     }
 
     @Override
+    protected void calculate() {
+        for(Row r : rows)
+            r.calculate();
+    }
+
+    @Override
     public java.awt.Component getComponent() {
         return container;
     }

@@ -48,4 +48,9 @@ public class Button extends GraphTemplate {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

@@ -93,4 +93,9 @@ public class BarGraph extends GraphTemplate {
         this.mMaxY = maxY;
         return this;
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

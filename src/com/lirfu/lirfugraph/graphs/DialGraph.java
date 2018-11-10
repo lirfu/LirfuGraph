@@ -38,4 +38,9 @@ public class DialGraph extends GraphTemplate {
         g.setColor(secondaryColor);
         g.drawLine(center.x, center.y, (int) (center.x + Math.cos(angle) * diameter / 2), (int) (center.y + Math.sin(angle) * diameter / 2));
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

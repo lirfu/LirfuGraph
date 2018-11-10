@@ -3,7 +3,7 @@ package com.lirfu.lirfugraph;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Window extends Component {
     private JFrame frame;
@@ -17,11 +17,13 @@ public class Window extends Component {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
+                container.getComponent().setLocation(padding, padding);
+                container.getComponent().setSize(getWidth() - padding * 2, getHeight() - padding * 2);
+                container.calculate();
+
                 g.setColor(backgroundColor);
                 g.fillRect(0, 0, getWidth(), getHeight());
 
-                container.getComponent().setLocation(padding, padding);
-                container.getComponent().setSize(getWidth() - padding * 2, getHeight() - padding * 2);
                 container.getComponent().paint(g);
             }
         };
@@ -89,6 +91,12 @@ public class Window extends Component {
     @Override
     void setRepaintManager(RepaintManager manager) {
         // do nothing
+    }
+
+    @Override
+    protected void calculate() {
+        if (container != null)
+            container.calculate();
     }
 
     public void setVisibility(boolean visibility) {

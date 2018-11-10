@@ -8,4 +8,8 @@ public class EmptySpace extends GraphTemplate {
     @Override
     public void paint(Graphics g) {
     }
+
+    @Override
+    protected void calculate() {
+    }
 }

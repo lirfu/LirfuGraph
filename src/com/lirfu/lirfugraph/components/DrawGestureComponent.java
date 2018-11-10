@@ -1,6 +1,7 @@
 package com.lirfu.lirfugraph.components;
 
 import com.lirfu.lirfugraph.GraphTemplate;
+import com.lirfu.lirfugraph.Point2D;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -31,14 +32,14 @@ public class DrawGestureComponent extends GraphTemplate {
                 Dimension size = template.getSize();
 
                 // Check bounds
-                if (p.x < l.x + padding || p.y < l.y + padding || p.x > l.x + size.width - padding || p.y > l.y + size.height - padding)
+                if (p.x < l.x + padding || p.y < l.y + padding || p.x >= l.x + size.width - padding || p.y >= l.y + size.height - padding)
                     return;
 
                 points = new ArrayList<>(); // Reset the canvas.
 
                 // Pixelize!
-                p.x = p.x / pixelSize * pixelSize;
-                p.y = p.y / pixelSize * pixelSize;
+                p.x = p.x / pixelSize * pixelSize - l.x - padding;
+                p.y = p.y / pixelSize * pixelSize - l.y - padding;
 
                 points.add(p);
                 DrawGestureComponent.this.repaint();
@@ -54,12 +55,12 @@ public class DrawGestureComponent extends GraphTemplate {
                 Dimension size = template.getSize();
 
                 // Check bounds
-                if (p.x < l.x + padding || p.y < l.y + padding || p.x > l.x + size.width - padding || p.y > l.y + size.height - padding)
+                if (p.x < l.x + padding || p.y < l.y + padding || p.x >= l.x + size.width - padding || p.y >= l.y + size.height - padding)
                     return;
 
                 // Pixelize!
-                p.x = p.x / pixelSize * pixelSize;
-                p.y = p.y / pixelSize * pixelSize;
+                p.x = p.x / pixelSize * pixelSize - l.x - padding;
+                p.y = p.y / pixelSize * pixelSize - l.y - padding;
 
                 if (!points.contains(p))
                     points.add(p);
@@ -75,10 +76,11 @@ public class DrawGestureComponent extends GraphTemplate {
     @Override
     public void paint(Graphics g) {
         drawTitleAndFrame(g, title);
+        Point l = template.getLocation();
 
         g.setColor(primaryColor);
         for (Point p : points)
-            g.fillRect(p.x, p.y, pixelSize, pixelSize);
+            g.fillRect(p.x + l.x + padding, p.y + l.y + padding, pixelSize, pixelSize);
 
         g.drawString("Points: " + points.size(), template.getX() + template.getWidth() - 2 * padding - 70, template.getY() + g.getFont().getSize() / 2);
     }
@@ -105,6 +107,11 @@ public class DrawGestureComponent extends GraphTemplate {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    protected void calculate() {
+        //TODO
     }
     //    public void optimize() {
 //        Point l = template.getLocation();

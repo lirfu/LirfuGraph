@@ -19,6 +19,7 @@ public abstract class GraphTemplate extends Component {
                 g.setColor(interfaceColor);
             }
         };
+//        template.createBufferStrategy(2);
     }
 
     protected Dimension getAdjustedSize() {

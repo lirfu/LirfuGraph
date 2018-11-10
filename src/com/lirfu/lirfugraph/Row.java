@@ -93,6 +93,12 @@ public class Row extends Component {
             g.setRepaintManager(manager);
     }
 
+    @Override
+    protected void calculate() {
+        for (Component c : graphs)
+            c.calculate();
+    }
+
     public Row setTitle(String title) {
         this.title = title;
         return this;

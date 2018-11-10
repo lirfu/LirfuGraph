@@ -42,5 +42,7 @@ public abstract class Component {
 
     abstract void setRepaintManager(RepaintManager manager);
 
+    protected abstract void calculate();
+
     abstract java.awt.Component getComponent();
 }

@@ -3,8 +3,11 @@ package com.lirfu.lirfugraph.graphs;
 import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 
 public class MultiLinearGraph extends GraphTemplate {
     private ArrayList<Double>[] points;
@@ -17,6 +20,8 @@ public class MultiLinearGraph extends GraphTemplate {
     private Double minY;
     private int dotSize = 6;
     private boolean showDots = true;
+
+    private BufferedImage image;
 
     public MultiLinearGraph(int numberOfGraphs, String... titles) {
         this("", numberOfGraphs, titles);
@@ -31,89 +36,99 @@ public class MultiLinearGraph extends GraphTemplate {
     }
 
     @Override
-    public void paint(Graphics g) {
-        Dimension size = getAdjustedSize();
-        Point l = template.getLocation();
+    protected void calculate() {
+        try {
+            image = new BufferedImage(template.getWidth() <= 0 ? 1 : template.getWidth(), template.getHeight() <= 0 ? 1 : template.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = image.createGraphics();
+            Dimension size = getAdjustedSize();
+            Point l = template.getLocation();
 
-        int iterations = points[0].size();
+            int iterations = points[0].size();
 
-        // Draw only frame.
-        drawTitleAndFrame(g, name);
+            // Draw only frame.
+            drawTitleAndFrame(g, name);
 
-        if (iterations == 0) {
-            g.setColor(primaryColor);
-            g.drawString("EMPTY!", l.x + padding + size.width / 2 - (int) (3 * g.getFont().getSize() * 0.4), l.y + padding + size.height / 2);
-            return;
-        }
+            if (iterations == 0) {
+                g.setColor(primaryColor);
+                g.drawString("EMPTY!", l.x + padding + size.width / 2 - (int) (3 * g.getFont().getSize() * 0.4), l.y + padding + size.height / 2);
+                return;
+            }
 
-        double max;
-        if (maxY != null)
-            max = maxY;
-        else {
-            ArrayList<Double> maxes = new ArrayList<>();
-            for (ArrayList<Double> point : points)
-                maxes.add(Collections.max(point));
-            max = Collections.max(maxes);
-        }
+            double max;
+            if (maxY != null)
+                max = maxY;
+            else {
+                ArrayList<Double> maxes = new ArrayList<>();
+                for (ArrayList<Double> point : points)
+                    maxes.add(Collections.max(point));
+                max = Collections.max(maxes);
+            }
 
-        double min;
-        if (minY != null)
-            min = minY;
-        else {
-            ArrayList<Double> mins = new ArrayList<>();
-            for (ArrayList<Double> point : points)
-                mins.add(Collections.min(point));
-            min = Collections.min(mins);
-        }
-        if (maxX == null) {
-            maxX = 0.;
-            for (ArrayList a : points)
-                if (maxX < a.size())
-                    maxX = (double)a.size();
-        }
-        if (minX == null)
-            minX = 1.;
+            double min;
+            if (minY != null)
+                min = minY;
+            else {
+                ArrayList<Double> mins = new ArrayList<>();
+                for (ArrayList<Double> point : points)
+                    mins.add(Collections.min(point));
+                min = Collections.min(mins);
+            }
+            if (maxX == null) {
+                maxX = 0.;
+                for (ArrayList a : points)
+                    if (maxX < a.size())
+                        maxX = (double) a.size();
+            }
+            if (minX == null)
+                minX = 1.;
 
-        double delta = (double) size.width / (iterations - 1);
-        double zoom = 1;
-        if (max != 0)
-            zoom = size.height / (max - min);
+            double delta = (double) size.width / (iterations - 1);
+            double zoom = 1;
+            if (max != 0)
+                zoom = size.height / (max - min);
 
-        // Draw titles in corresponding colorPalette.
-        int titleOffset = 70;
-        for (int i = 0; i < titles.length; i++) {
-            g.setColor(colorPalette[i % colorPalette.length]);
-            g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);
-            titleOffset += (1 + titles[i].length()) * g.getFontMetrics().charWidth('a');
-        }
+            // Draw titles in corresponding colorPalette.
+            int titleOffset = 70;
+            for (int i = 0; i < titles.length; i++) {
+                g.setColor(colorPalette[i % colorPalette.length]);
+                g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);
+                titleOffset += (1 + titles[i].length()) * g.getFontMetrics().charWidth('a');
+            }
 
-        g.setColor(interfaceColor);
-        g.drawString("Min: " + min + "   Max: " + max, l.x + size.width * 2 / 3, l.y + padding - 6);
+            g.setColor(interfaceColor);
+            g.drawString("Min: " + min + "   Max: " + max, l.x + size.width * 2 / 3, l.y + padding - 6);
 //        g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
 //        g.drawString("Min: " + min, l.x + template.getWidth() / 2, l.y + size.height + padding + 13);
 
-        // First value
-        double[] lastValues = new double[points.length];
-        for (int i = 0; i < points.length; i++)
-            lastValues[i] = points[i].get(0);
+            // First value
+            double[] lastValues = new double[points.length];
+            for (int i = 0; i < points.length; i++)
+                lastValues[i] = points[i].get(0);
 
-        // Draw the curve
-        double currentx = padding;
-        for (int i = 1; i < points[0].size(); i++) {
-            for (int j = 0; j < points.length; j++) {
-                double val = points[j].get(i);
-                g.setColor(colorPalette[j % colorPalette.length]);
-                g.drawLine(l.x + (int) currentx, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding, l.x + (int) (currentx + delta), l.y + (int) (size.height - (val - min) * zoom) + padding);
-                if (showDots)
-                    g.fillOval(l.x + (int) currentx - dotSize / 2, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding - dotSize / 2, dotSize, dotSize);
-                lastValues[j] = val;
+            // Draw the curve
+            double currentx = padding;
+            for (int i = 1; i < points[0].size(); i++) {
+                for (int j = 0; j < points.length; j++) {
+                    double val = points[j].get(i);
+                    g.setColor(colorPalette[j % colorPalette.length]);
+                    g.drawLine(l.x + (int) currentx, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding, l.x + (int) (currentx + delta), l.y + (int) (size.height - (val - min) * zoom) + padding);
+                    if (showDots)
+                        g.fillOval(l.x + (int) currentx - dotSize / 2, l.y + (int) (size.height - (lastValues[j] - min) * zoom) + padding - dotSize / 2, dotSize, dotSize);
+                    lastValues[j] = val;
+                }
+
+                currentx += delta;
             }
 
-            currentx += delta;
+            g.drawString("" + minX, l.x, l.y + size.height + 2 * padding);
+            g.drawString("" + maxX, l.x + size.width, l.y + size.height + 2 * padding);
+        } catch (ConcurrentModificationException ignore) {
         }
+    }
 
-        g.drawString("" + minX, l.x, l.y + size.height + 2 * padding);
-        g.drawString("" + maxX, l.x + size.width, l.y + size.height + 2 * padding);
+    @Override
+    public void paint(Graphics g) {
+        g.drawImage(image, 0, 0, null);
     }
 
     public void add(double... values) {

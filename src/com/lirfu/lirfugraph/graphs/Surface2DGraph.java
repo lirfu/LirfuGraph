@@ -140,6 +140,11 @@ public class Surface2DGraph extends GraphTemplate {
         return this;
     }
 
+    @Override
+    protected void calculate() {
+        //TODO
+    }
+
     public interface Function {
         public double calculate(Point2D input);
     }

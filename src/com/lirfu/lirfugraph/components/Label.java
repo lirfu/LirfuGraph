@@ -45,4 +45,9 @@ public class Label extends GraphTemplate {
         this.contentLines = content.split("\n");
         return this;
     }
+
+    @Override
+    protected void calculate() {
+        //TODO
+    }
 }

@@ -1,5 +1,8 @@
 package com.lirfu.lirfugraph;
 
+import com.lirfu.lirfugraph.graphs.LinearGraph;
+import com.lirfu.lirfugraph.utils.Tools;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Collections;
@@ -9,6 +12,7 @@ public class BarGraph extends GraphTemplate {
     private String title;
     public LinkedList<Double> values;
     private LinkedList<String> names;
+    private Double mMaxY;
 
     public BarGraph(String title) {
         values = new LinkedList<>();
@@ -25,8 +29,20 @@ public class BarGraph extends GraphTemplate {
 
         drawTitleAndFrame(g, title);
 
+        // Display empty message if no points are available.
+        if (values.size() == 0) {
+            g.setColor(super.primaryColor);
+            g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
+            return;
+        }
+
         int rectWidth = size.width / values.size() / 2;
-        double max = Collections.max(values);
+
+        double max;
+        if (mMaxY == null)
+            max = Collections.max(values);
+        else
+            max = mMaxY;
 
         // Draw max y value.
         g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
@@ -40,15 +56,14 @@ public class BarGraph extends GraphTemplate {
 
                 // Draw the label
                 g.setColor(interfaceColor);
-                g2.drawString(names.get(i) + " = ", -(padding - 5 + l.y + size.height),(int) (rectWidth * (2 * i+1) + padding + l.x - 12));
-                g.setColor(secondaryColor);
-                g2.drawString(values.get(i) + "", -(padding - 5 + l.y + size.height), (int)(rectWidth * (2 * i+1) + padding + l.x - 2));
+                g2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));
+                g2.drawString(names.get(i) + " = " + Tools.round(values.get(i), 3), -(padding - 5 + l.y + size.height), (int) (rectWidth * (2 * i + 1) + padding + l.x - 12));
 
                 g2.setTransform(old);
 
                 // Draw the bar.
-                g.setColor(primaryColor);
-                g.fillRect(rectWidth * (2 * i + 1) + padding + l.x, (int) ((1 - values.get(i) / max) * size.height) + padding + l.y, rectWidth, (int) (values.get(i) / max * size.height));
+                g.setColor(colorPalette[i % colorPalette.length]);
+                g.fillRect(rectWidth * (2 * i + 1) + padding + l.x, (int) ((1 - values.get(i) / max) * size.height) + padding + l.y + 1, rectWidth, (int) (values.get(i) / max * size.height));
 
             }
         } else {
@@ -67,5 +82,20 @@ public class BarGraph extends GraphTemplate {
     public void add(String name, double value) {
         values.add(value);
         names.add(name);
+    }
+
+    public void clear() {
+        values = new LinkedList<>();
+        names = new LinkedList<>();
+    }
+
+    public BarGraph setMaxY(Double maxY) {
+        this.mMaxY = maxY;
+        return this;
+    }
+
+    @Override
+    protected void calculate() {
+        //TODO
     }
 }

@@ -3,30 +3,45 @@ package com.lirfu.lirfugraph;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-public class Window {
+public class Window extends Component {
     private JFrame frame;
 
     private int padding = 10;
-    private Color background = Color.decode("0x000000");
     private Component container;
+    private RepaintManager repaintManager;
 
     public Window(Component container, boolean exitOnClose) {
         this.frame = new JFrame("LirfuGraph") {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                g.setColor(background);
-                g.fillRect(0, 0, getWidth(), getHeight());
-
                 container.getComponent().setLocation(padding, padding);
                 container.getComponent().setSize(getWidth() - padding * 2, getHeight() - padding * 2);
+                container.calculate();
+
+                g.setColor(backgroundColor);
+                g.fillRect(0, 0, getWidth(), getHeight());
+
                 container.getComponent().paint(g);
             }
         };
 
         this.container = container;
+
+        repaintManager = new RepaintManager() {
+            @Override
+            public void requestRepaint() {
+                frame.repaint();
+            }
+
+            @Override
+            public void requestRepaint(int x, int y, int width, int height) {
+                frame.repaint(x, y, width, height);
+            }
+        };
+        container.setRepaintManager(repaintManager);
 
         for (MouseListener l : container.getComponent().getMouseListeners())
             frame.addMouseListener(l);
@@ -43,9 +58,9 @@ public class Window {
         });
 
         frame.setLocation(0, 0);
-        frame.setSize(1000, 400);
+        frame.setSize(1000, 600);
 
-        frame.setDefaultCloseOperation(exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE);
         frame.setFocusable(true);
     }
 
@@ -63,8 +78,33 @@ public class Window {
         frame.setSize(size);
         return this;
     }
-    public Window setLocation(Point p){
+
+    public Window setLocation(Point p) {
         frame.setLocation(p);
         return this;
+    }
+
+    public void repaint() {
+        frame.repaint();
+    }
+
+    @Override
+    void setRepaintManager(RepaintManager manager) {
+        // do nothing
+    }
+
+    @Override
+    protected void calculate() {
+        if (container != null)
+            container.calculate();
+    }
+
+    public void setVisibility(boolean visibility) {
+        frame.setVisible(visibility);
+    }
+
+    @Override
+    public java.awt.Component getComponent() {
+        throw new IllegalStateException("Window can't be a child!");
     }
 }

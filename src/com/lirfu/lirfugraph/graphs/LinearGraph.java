@@ -1,6 +1,7 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
 
-import javax.sound.sampled.Line;
+import com.lirfu.lirfugraph.GraphTemplate;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -17,8 +18,8 @@ public class LinearGraph extends GraphTemplate {
     private Double minY;
     private String title;
 
-    private boolean showDots = true;
-    private boolean showValues = true;
+    private boolean showDots = false;
+    private boolean showValues = false;
     private final int dotSize = 6;
 
     public LinearGraph(String title) {
@@ -133,5 +134,10 @@ public class LinearGraph extends GraphTemplate {
     public void setSize(Dimension d) {
         template.setSize(d);
         maxDrawnPoints = d.width - 2 * padding;
+    }
+
+    @Override
+    protected void calculate() {
+        //TODO
     }
 }

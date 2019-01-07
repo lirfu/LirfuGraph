@@ -3,28 +3,32 @@ package com.lirfu.lirfugraph;
 import javax.swing.JPanel;
 import java.awt.*;
 
-public abstract class GraphTemplate implements Component {
-    protected static int padding = 25;
-    protected Color interfaceColor = Color.decode("0xb0b0b0");
-    protected Color primaryColor = Color.decode("0x2292df");
-    protected Color secondaryColor = Color.decode("0xdf2222");
-    protected Color[] colorPalette = {primaryColor, secondaryColor, Color.green, Color.orange, Color.pink, Color.white, Color.cyan, Color.magenta};
+public abstract class GraphTemplate extends Component {
+    protected int padding = 25;
 
+    protected boolean isDirty = true;
 
-    protected JPanel template;
+    protected Canvas template;
 
     protected GraphTemplate() {
-        template = new JPanel() {
+        template = new Canvas() {
             @Override
             public void paint(Graphics g) {
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, Config.FONT_SIZE));
                 GraphTemplate.this.paint(g);
+                g.setColor(interfaceColor);
             }
         };
+//        template.createBufferStrategy(2);
     }
 
     protected Dimension getAdjustedSize() {
         return new Dimension(template.getWidth() - padding * 2, template.getHeight() - padding * 2);
+    }
+
+    protected void getAdjustedSize(Dimension dim) {
+        dim.width = template.getWidth() - padding * 2;
+        dim.height = template.getHeight() - padding * 2;
     }
 
     protected void drawTitleAndFrame(Graphics g, String title) {
@@ -41,7 +45,7 @@ public abstract class GraphTemplate implements Component {
     }
 
     public GraphTemplate setPadding(int padding) {
-        GraphTemplate.padding = padding;
+        this.padding = padding;
         return this;
     }
 
@@ -51,4 +55,14 @@ public abstract class GraphTemplate implements Component {
     }
 
     public abstract void paint(Graphics g);
+
+    @Override
+    void setRepaintManager(RepaintManager manager) {
+        repaintManager = manager;
+    }
+
+    @Override
+    public void repaint() {
+        repaintManager.requestRepaint(template.getX(), template.getY(), template.getWidth(), template.getHeight());
+    }
 }

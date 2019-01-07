@@ -8,7 +8,8 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-public class VerticalContainer implements Component {
+public class VerticalContainer extends Component {
+    private String title;
     private JPanel container;
     private LinkedList<Row> rows;
 
@@ -17,16 +18,37 @@ public class VerticalContainer implements Component {
             @Override
             public void paint(Graphics g) {
                 Point l = getLocation();
-                int rowHeight = getHeight() / rows.size();
-                int counter = 0;
 
+                int availableHeight = getHeight();
+                int scalableRows = rows.size();
+                for (Row r : rows)
+                    if (r.fixedSize != null) {
+                        availableHeight -= r.fixedSize.height;
+                        scalableRows--;
+
+                        if (getWidth() < r.fixedSize.width)
+                            fixedSize = new Dimension(r.fixedSize.width, getHeight());
+                    }
+
+                int singleHeight = scalableRows > 0 ? availableHeight / scalableRows : 0;
+                int width = fixedSize == null ? getWidth() : fixedSize.width;
+
+                int heightCounter = l.y;
                 for (Row r : rows) {
-                    r.getComponent().setSize(getWidth(), rowHeight);
-                    r.getComponent().setLocation(l.x, counter * rowHeight + l.y);
+                    r.getComponent().setLocation(l.x, heightCounter);
+                    if (r.fixedSize != null) {
+                        r.getComponent().setSize(r.fixedSize);
+                        heightCounter += r.fixedSize.height;
+                    } else {
+                        r.getComponent().setSize(width, singleHeight);
+                        heightCounter += singleHeight;
+                    }
                     r.getComponent().paint(g);
-
-                    counter++;
                 }
+
+                if (title != null)
+                    g.drawString(title, (int) (l.x + (getWidth() - title.length() * Config.FONT_SIZE) / 2f), l.y + 8);
+
             }
         };
 
@@ -50,11 +72,32 @@ public class VerticalContainer implements Component {
         for (KeyListener l : row.getComponent().getKeyListeners())
             container.addKeyListener(l);
 
+        row.setRepaintManager(repaintManager);
+
         return this;
+    }
+
+    public VerticalContainer setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    @Override
+    void setRepaintManager(RepaintManager manager) {
+        repaintManager = manager;
+        for (Row r : rows)
+            r.setRepaintManager(manager);
+    }
+
+    @Override
+    protected void calculate() {
+        for(Row r : rows)
+            r.calculate();
     }
 
     @Override
     public java.awt.Component getComponent() {
         return container;
     }
+
 }

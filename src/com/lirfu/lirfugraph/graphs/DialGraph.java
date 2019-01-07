@@ -1,4 +1,6 @@
-package com.lirfu.lirfugraph;
+package com.lirfu.lirfugraph.graphs;
+
+import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
 
@@ -35,5 +37,10 @@ public class DialGraph extends GraphTemplate {
         // Draw the dial.
         g.setColor(secondaryColor);
         g.drawLine(center.x, center.y, (int) (center.x + Math.cos(angle) * diameter / 2), (int) (center.y + Math.sin(angle) * diameter / 2));
+    }
+
+    @Override
+    protected void calculate() {
+        //TODO
     }
 }

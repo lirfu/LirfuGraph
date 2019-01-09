@@ -13,18 +13,20 @@ public class ScatterGraph extends GraphTemplate {
     private Double minX;
     private Double maxY;
     private Double minY;
+
+    private String name;
     private String[] titles;
     private boolean invertY = false;
 
     private int pointSize = 6;
 
-    public ScatterGraph(String... titles) {
+    public ScatterGraph(String name, String... titles) {
+        this.name = name;
         this.titles = titles;
 
         points = new ArrayList[titles.length];
         for (int i = 0; i < titles.length; i++)
             points[i] = new ArrayList<>();
-
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ScatterGraph extends GraphTemplate {
 
         // Display empty message if no points are available.
         if (empty()) {
-            g.setColor(super.primaryColor);
+            g.setColor(primaryColor);
             g.drawString("EMPTY!", l.x + template.getWidth() / 4, l.y + template.getHeight() / 2);
             return;
         }
@@ -60,9 +62,9 @@ public class ScatterGraph extends GraphTemplate {
         double zoomX = size.width / (maxX - minX);
         double zoomY = size.height / (maxY - minY);
 
-        drawTitleAndFrame(g, "");
+        drawTitleAndFrame(g, name);
         // Draw titles in corresponding colorPalette.
-        int titleOffset = 70;
+        int titleOffset = 0;
         for (int i = 0; i < titles.length; i++) {
             g.setColor(colorPalette[i % colorPalette.length]);
             g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);
@@ -70,11 +72,10 @@ public class ScatterGraph extends GraphTemplate {
         }
 
         // Draw max and min y value.
-        g.setColor(super.interfaceColor);
-        g.drawString("Min: (" + minX + ", " + minY + ")   Max: (" + maxX + ", " + maxY + ")", l.x + size.width / 3, l.y + padding - 3);
+        drawBoundValues(g,minX, maxX, minY, maxY);
 
         // Draw points.
-        g.setColor(super.primaryColor);
+        g.setColor(primaryColor);
         for (int i = 0; i < points.length; i++) {
             g.setColor(colorPalette[i % colorPalette.length]);
             for (Point2D d : points[i])

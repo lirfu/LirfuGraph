@@ -20,6 +20,7 @@ public class LinearGraph extends GraphTemplate {
 
     private boolean showDots = false;
     private boolean showValues = false;
+    private boolean showAxes = true;
     private final int dotSize = 6;
 
     public LinearGraph(String title) {
@@ -63,9 +64,9 @@ public class LinearGraph extends GraphTemplate {
         double zoom = size.height / (max - min);
 
         drawTitleAndFrame(g, title);
-
-        // Draw max and min y value.
-        g.drawString("Min: " + min + "   Max: " + max, l.x + size.width / 3, l.y + padding - 3);
+        if (showAxes)
+            drawAxes(g, minX, maxX, min, max, zoom);
+        drawBoundValues(g, minX, maxX, min, max);
 
         // First value.
         g.setColor(super.primaryColor);
@@ -128,6 +129,11 @@ public class LinearGraph extends GraphTemplate {
 
     public LinearGraph setShowValues(boolean showValues) {
         this.showValues = showValues;
+        return this;
+    }
+
+    public LinearGraph setShowAxes(boolean showAxes) {
+        this.showAxes = showAxes;
         return this;
     }
 

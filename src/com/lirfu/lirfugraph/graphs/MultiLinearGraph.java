@@ -1,8 +1,10 @@
 package com.lirfu.lirfugraph.graphs;
 
+import com.lirfu.lirfugraph.Config;
 import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class MultiLinearGraph extends GraphTemplate {
     private Double minY;
     private int dotSize = 6;
     private boolean showDots = true;
+    private boolean showAxes = true;
 
     private BufferedImage image;
 
@@ -42,18 +45,19 @@ public class MultiLinearGraph extends GraphTemplate {
             Graphics2D g = image.createGraphics();
             Dimension size = getAdjustedSize();
             Point l = template.getLocation();
-
             int iterations = points[0].size();
 
             // Draw only frame.
             drawTitleAndFrame(g, name);
 
+            // Empty graph.
             if (iterations == 0) {
                 g.setColor(primaryColor);
                 g.drawString("EMPTY!", l.x + padding + size.width / 2 - (int) (3 * g.getFont().getSize() * 0.4), l.y + padding + size.height / 2);
                 return;
             }
 
+            // Find Y max.
             double max;
             if (maxY != null)
                 max = maxY;
@@ -64,6 +68,7 @@ public class MultiLinearGraph extends GraphTemplate {
                 max = Collections.max(maxes);
             }
 
+            // Find Y min.
             double min;
             if (minY != null)
                 min = minY;
@@ -73,32 +78,35 @@ public class MultiLinearGraph extends GraphTemplate {
                     mins.add(Collections.min(point));
                 min = Collections.min(mins);
             }
+            // Set max X.
             if (maxX == null) {
                 maxX = 0.;
                 for (ArrayList a : points)
                     if (maxX < a.size())
                         maxX = (double) a.size();
             }
+            // Set min X.
             if (minX == null)
                 minX = 1.;
 
+            // Calculate X delta and Y zoom.
             double delta = (double) size.width / (iterations - 1);
             double zoom = 1;
             if (max != 0)
                 zoom = size.height / (max - min);
 
+            // Draw axes and bounds.
+            if (showAxes)
+                drawAxes(g, minX, maxX, min, max, zoom);
+            drawBoundValues(g, minX, maxX, min, max);
+
             // Draw titles in corresponding colorPalette.
-            int titleOffset = 70;
+            int titleOffset = g.getFontMetrics().stringWidth(name) + 5;
             for (int i = 0; i < titles.length; i++) {
                 g.setColor(colorPalette[i % colorPalette.length]);
                 g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);
-                titleOffset += (1 + titles[i].length()) * g.getFontMetrics().charWidth('a');
+                titleOffset += (2 + titles[i].length()) * Config.FONT_SIZE * 0.5;
             }
-
-            g.setColor(interfaceColor);
-            g.drawString("Min: " + min + "   Max: " + max, l.x + size.width * 2 / 3, l.y + padding - 6);
-//        g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
-//        g.drawString("Min: " + min, l.x + template.getWidth() / 2, l.y + size.height + padding + 13);
 
             // First value
             double[] lastValues = new double[points.length];
@@ -161,6 +169,11 @@ public class MultiLinearGraph extends GraphTemplate {
 
     public MultiLinearGraph setShowDots(boolean showDots) {
         this.showDots = showDots;
+        return this;
+    }
+
+    public MultiLinearGraph setShowAxes(boolean showAxes) {
+        this.showAxes = showAxes;
         return this;
     }
 

@@ -7,6 +7,7 @@ import com.lirfu.lirfugraph.VerticalContainer;
 import com.lirfu.lirfugraph.graphs.*;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by lirfu on 16.03.17..
@@ -18,7 +19,7 @@ public class Demo {
 
         // Define and add graphs.
 //        DualLinearGraph d = new DualLinearGraph("Dual linear graph");
-        MultiLinearGraph d = new MultiLinearGraph(4, "Positive square-Sinusoid-Cosinusoid-Negative square".split("-"));
+        MultiLinearGraph d = new MultiLinearGraph("MultiLinearGraph", 4, "Positive square-Sinusoid-Cosinusoid-Negative square".split("-"));
         d.setShowDots(false);
         container.addRow(new Row(d)); // Add the graph wrapped in a row (one graph in row).
 
@@ -31,26 +32,24 @@ public class Demo {
         // Insert the values for display.
         for (double i = 0; i < 1e4; i++) {
             l.add(i % 1000 + 2 * i / 1000);
-            d.add(i * i, i * i * Math.sin(0.01 * i),i * i * Math.cos(0.01 * i), -i * i);
+            d.add(i * i, i * i * Math.sin(0.01 * i), i * i * Math.cos(0.01 * i), -i * i);
         }
         b.add("2015.", 100);
         b.add("2016.", 170);
         b.add("2017.", 90);
 
-        ScatterGraph sc = new ScatterGraph("Scatter");
+        ScatterGraph sc = new ScatterGraph("ScatterGraph", "t1", "t2");
         Surface2DGraph surf = new Surface2DGraph("Surface2D", input -> Math.sin(.1 * input.x) * Math.cos(2 * input.y), new Surface2DGraph.Bounds(-5, 5, -5, 5));
         surf.setMinZ(0.);
         container.addRow(new Row(sc, surf));
 
-        sc.add(0, 0, 0);
-        sc.add(0, 10, 10);
-        sc.add(0, 20, 20);
-        sc.add(0, 20, 10);
-        sc.add(0, 10, 20);
-        sc.add(0, 50, 50);
-        sc.add(0, 60, 50);
-        sc.add(0, 50, 60);
-        sc.add(0, 100, 100);
+        Random r = new Random(42);
+        Point p1 = new Point(60, 50);
+        Point p2 = new Point(20, 10);
+        for (int i = 0; i < 50; i++) {
+            sc.add(0, r.nextGaussian() * 30 + p1.x, r.nextGaussian() * 10 + p1.y);
+            sc.add(1, r.nextGaussian() * 30 + p2.x, r.nextGaussian() * 30 + p2.y);
+        }
 
         new Window(container, true, true).setTitle("Showcase").setSize(new Dimension(800, 800));
     }

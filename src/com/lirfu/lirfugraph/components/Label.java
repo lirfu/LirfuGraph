@@ -25,10 +25,10 @@ public class Label extends GraphTemplate {
         Point l = template.getLocation();
         Dimension size = getAdjustedSize();
 
-        g.setColor(interfaceColor);
+        g.setColor(primaryColor);
         g.drawString(title, l.x + (int) (Config.FONT_SIZE * 0.39), l.y + Config.FONT_SIZE);
 
-        g.setColor(primaryColor);
+        g.setColor(interfaceColor);
         g.drawRect(l.x, l.y, size.width + 2 * padding, size.height + 2 * padding);
 
         if (contentLines == null) return;

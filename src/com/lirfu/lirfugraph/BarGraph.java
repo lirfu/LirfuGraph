@@ -45,7 +45,8 @@ public class BarGraph extends GraphTemplate {
             max = mMaxY;
 
         // Draw max y value.
-        g.drawString("Max: " + max, l.x + template.getWidth() / 2, l.y + padding - 3);
+        String smax = "Max: " + max;
+        g.drawString(smax, l.x + padding + size.width - g.getFontMetrics().stringWidth(smax), l.y + padding - 3);
 
         if (rectWidth > 7) {
 

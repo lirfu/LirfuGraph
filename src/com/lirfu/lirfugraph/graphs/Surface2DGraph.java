@@ -56,8 +56,10 @@ public class Surface2DGraph extends GraphTemplate {
 
                 drawTitleAndFrame(g, title);
 
-                g.drawString("Max: " + Tools.round(max, 2), l.x + padding + size.width / 2, l.y + padding - 3);
-                g.drawString("Min: " + Tools.round(min, 2), l.x + padding + size.width / 2, l.y + padding + size.height + 13);
+                String smax = "Max: " + Tools.round(max, 2);
+                String smin = "Min: " + Tools.round(min, 2);
+                g.drawString(smax, l.x + padding + size.width - g.getFontMetrics().stringWidth(smax), l.y + padding - 3);
+                g.drawString(smin, l.x + padding + size.width - g.getFontMetrics().stringWidth(smin), l.y + padding + size.height + 13);
 
                 // First value.
                 for (int x = 0; x < size.width; x++) {

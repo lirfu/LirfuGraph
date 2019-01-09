@@ -19,21 +19,28 @@ public abstract class Component {
     protected static Color primaryColor;
     protected static Color secondaryColor;
     protected static Color[] colorPalette;
+    protected static Theme theme;
 
     protected Component() {
         setTheme(new DarkTheme());
     }
 
-    public void setTheme(Theme theme) {
-        backgroundColor = theme.getBackgroundColor();
-        interfaceColor = theme.getInterfaceColor();
-        primaryColor = theme.getPrimaryColor();
-        secondaryColor = theme.getSecondaryColor();
-        colorPalette = theme.getColorPalette();
+    public void setTheme(Theme t) {
+        theme = t;
+        backgroundColor = t.getBackgroundColor();
+        interfaceColor = t.getInterfaceColor();
+        primaryColor = t.getPrimaryColor();
+        secondaryColor = t.getSecondaryColor();
+        colorPalette = t.getColorPalette();
     }
 
-    public void setFixedSize(Dimension size) {
+    public static Theme getTheme() {
+        return theme;
+    }
+
+    public Component setFixedSize(Dimension size) {
         fixedSize = size;
+        return this;
     }
 
     public void repaint() {

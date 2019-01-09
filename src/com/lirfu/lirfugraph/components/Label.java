@@ -15,6 +15,11 @@ public class Label extends GraphTemplate {
         this.title = title;
     }
 
+    public Label(String title, String content){
+        this(title);
+        setContent(content);
+    }
+
     @Override
     public void paint(Graphics g) {
         Point l = template.getLocation();

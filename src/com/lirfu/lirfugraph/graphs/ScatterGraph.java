@@ -64,7 +64,7 @@ public class ScatterGraph extends GraphTemplate {
 
         drawTitleAndFrame(g, name);
         // Draw titles in corresponding colorPalette.
-        int titleOffset = 0;
+        int titleOffset = g.getFontMetrics().stringWidth(name) + 5;
         for (int i = 0; i < titles.length; i++) {
             g.setColor(colorPalette[i % colorPalette.length]);
             g.drawString(titles[i], l.x + titleOffset, l.y + padding - 6);

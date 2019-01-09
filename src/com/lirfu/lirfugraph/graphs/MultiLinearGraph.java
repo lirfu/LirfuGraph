@@ -45,6 +45,9 @@ public class MultiLinearGraph extends GraphTemplate {
             Point l = template.getLocation();
             int iterations = points[0].size();
 
+            g.setColor(backgroundColor);
+            g.fillRect(0, 0, template.getWidth(), template.getHeight());
+
             // Draw only frame.
             drawTitleAndFrame(g, name);
 
@@ -125,10 +128,8 @@ public class MultiLinearGraph extends GraphTemplate {
 
                 currentx += delta;
             }
-
-            g.drawString("" + minX, l.x, l.y + size.height + 2 * padding);
-            g.drawString("" + maxX, l.x + size.width, l.y + size.height + 2 * padding);
-        } catch (ConcurrentModificationException ignore) {
+        } catch (ConcurrentModificationException e) {
+            System.out.println(e);
         }
     }
 
@@ -186,8 +187,14 @@ public class MultiLinearGraph extends GraphTemplate {
             points[i] = new ArrayList<>();
     }
 
-    public BufferedImage getImage() {
+    public BufferedImage getImage(Dimension dimension) {
+        Point l = template.getLocation();
+        Dimension d = template.getSize();
+        template.setLocation(0, 0);
+        template.setSize(dimension);
         calculate();
+        template.setLocation(l);
+        template.setSize(d);
         return image;
     }
 }

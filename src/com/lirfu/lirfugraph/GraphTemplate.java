@@ -42,7 +42,7 @@ public abstract class GraphTemplate extends Component {
         g.drawLine(l.x + padding, l.y + padding, l.x + padding, l.y + padding + size.height); // first vertical
         g.drawLine(l.x + padding + size.width, l.y + padding, l.x + padding + size.width, l.y + padding + size.height); // last vertical
 
-        g.drawString(title, l.x, l.y + Math.min(padding, Config.FONT_SIZE) / 2);
+        g.drawString(title, l.x, l.y + padding - Config.FONT_SIZE / 2);
     }
 
     protected void drawAxes(Graphics g, double minX, double maxX, double minY, double maxY, double zoom) {
@@ -60,7 +60,7 @@ public abstract class GraphTemplate extends Component {
         }
     }
 
-    protected void drawBoundValues(Graphics g, double minX, double maxX, double minY, double maxY){
+    protected void drawBoundValues(Graphics g, double minX, double maxX, double minY, double maxY) {
         Point l = template.getLocation();
         Dimension size = getAdjustedSize();
         g.setColor(interfaceColor);

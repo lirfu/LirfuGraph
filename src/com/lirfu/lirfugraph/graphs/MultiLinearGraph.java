@@ -4,9 +4,7 @@ import com.lirfu.lirfugraph.Config;
 import com.lirfu.lirfugraph.GraphTemplate;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
@@ -186,5 +184,10 @@ public class MultiLinearGraph extends GraphTemplate {
         this.points = new ArrayList[points.length];
         for (int i = 0; i < points.length; i++)
             points[i] = new ArrayList<>();
+    }
+
+    public BufferedImage getImage() {
+        calculate();
+        return image;
     }
 }
